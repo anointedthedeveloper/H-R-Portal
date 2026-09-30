@@ -79,7 +79,8 @@
   .dt-table tr { border-bottom: 1px solid var(--border); padding: 8px 0; }
   .dt-table tr.empty-row { padding: 0; }
   .dt-table td { border: 0; padding: 4px 12px; display: grid; grid-template-columns: 38% minmax(0, 1fr); gap: 8px; text-align: left !important; }
-  .dt-table td::before { content: attr(data-label); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); padding-top: 2px; }
+  .dt-table td > * { grid-column: 2; justify-self: start; }
+  .dt-table td::before { grid-row: 1 / span 3; content: attr(data-label); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); padding-top: 2px; }
   .dt-table td.col-check { display: block; }
   .dt-table td.col-check::before { content: none; }
   .dt-table td.col-actions { width: 100%; }

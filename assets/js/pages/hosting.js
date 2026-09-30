@@ -630,7 +630,7 @@
         items().forEach((n) => { if (e.target.checked) selected.add(n.name); else selected.delete(n.name); });
         renderList();
       }
-      if (e.target.id === 'fm-upload') { upload(e.target.files); e.target.value = ''; }
+      if (e.target.id === 'fm-upload') { upload(Array.from(e.target.files)); e.target.value = ''; }
     });
     body.addEventListener('input', Util.debounce((e) => { if (e.target.id === 'fm-search') { filter = e.target.value.trim(); renderList(); } }, 120));
     body.addEventListener('contextmenu', (e) => {
@@ -648,7 +648,7 @@
       const drop = e.target.closest('#fm-drop');
       if (!drop) return;
       e.preventDefault(); drop.classList.remove('dragging');
-      if (type === 'drop' && e.dataTransfer) upload(e.dataTransfer.files);
+      if (type === 'drop' && e.dataTransfer) upload(Array.from(e.dataTransfer.files));
     }));
 
     renderAll();

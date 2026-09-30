@@ -87,12 +87,13 @@
         Store.set('accountCredit', Math.round((credit - applied) * 100) / 100);
         Store.prepend('transactions', { id: 'TXN-' + String(Date.now() + 1).slice(-6), date: fmt.isoDateTime(App.now()), description: 'Account credit applied to ' + inv.id, type: 'Credit', method: 'Account credit', amount: -applied, status: 'Completed', invoiceId: inv.id });
       }
-      const result = Services.payInvoice(inv.id, Services.paymentMethodLabel(method));
+      const charged = Math.round((total - applied) * 100) / 100;
+      const result = Services.payInvoice(inv.id, Services.paymentMethodLabel(method), charged);
       if (window.Shell) Shell.refreshNotifications();
       setTimeout(() => {
         UI.modal({
           title: 'Payment successful', size: 'sm',
-          body: '<p>' + fmt.money(total) + ' paid for <strong>' + esc(inv.id) + '</strong> using ' + esc(Services.paymentMethodLabel(method)) + (applied ? ' and ' + fmt.money(applied) + ' account credit' : '') + '.</p>' +
+          body: '<p><strong>' + esc(inv.id) + '</strong> (' + fmt.money(total) + ') is paid: ' + fmt.money(charged) + ' charged to ' + esc(Services.paymentMethodLabel(method)) + (applied ? ' and ' + fmt.money(applied) + ' account credit applied' : '') + '.</p>' +
             (result.effects.length ? '<ul class="article-body">' + result.effects.map((e) => '<li>' + esc(e) + '</li>').join('') + '</ul>' : '') + View.demoNote('Simulated payment. No money was moved.'),
           actions: [{ label: 'Done', variant: 'primary' }],
           onClose: () => { if (onDone) onDone(); }

@@ -123,10 +123,10 @@
     paymentMethodLabel(method) {
       return method.type === 'Bank transfer' ? 'Bank transfer' : method.type + ' ending ' + method.last4;
     },
-    payInvoice(invoiceId, methodLabel) {
+    payInvoice(invoiceId, methodLabel, charged) {
       const invoice = Store.find('invoices', invoiceId);
       if (!invoice) return null;
-      const total = Services.invoiceTotal(invoice);
+      const total = charged === undefined ? Services.invoiceTotal(invoice) : charged;
       const nowIso = fmt.isoDateTime(App.now());
       Store.patch('invoices', invoiceId, { status: 'Paid', paidOn: fmt.isoDate(App.now()), method: methodLabel });
       Store.prepend('transactions', {

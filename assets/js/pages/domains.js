@@ -423,6 +423,7 @@
       case 'CNAME':
         if (name === '@') return { field: 'name', message: 'A CNAME cannot be created at the zone root (@).' };
         if (!HOST_RE.test(v)) return { field: 'value', message: 'Enter a valid hostname.' };
+        if (others.some((r) => r.type === 'CNAME')) return { field: 'name', message: name + ' already has a CNAME record. Edit that record instead.' };
         if (others.length) return { field: 'name', message: 'A CNAME cannot share a name with other records (' + others.map((r) => r.type).join(', ') + ').' };
         break;
       case 'MX': case 'NS': if (!HOST_RE.test(v)) return { field: 'value', message: 'Enter a valid hostname.' }; break;
