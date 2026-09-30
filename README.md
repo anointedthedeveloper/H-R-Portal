@@ -25,6 +25,16 @@ python3 -m http.server 8080
 
 Any static server works, for example `npx serve .`. You can also open `index.html` directly from disk. Chromium-based browsers share `localStorage` across `file://` pages, but some browsers isolate it per file, which breaks the login session. If you open the files directly and sign-in doesn't stick, use a server.
 
+## Deploying to Vercel
+
+It's a static site, so no build step is needed.
+
+1. Import the repository in Vercel.
+2. Set **Framework Preset** to **Other**, leave **Build Command** empty, and set **Output Directory** to `.` (the repo root).
+3. Deploy. `vercel.json` turns off clean URLs so pages keep their `.html` paths, and it sends a `noindex` header so the demo isn't indexed.
+
+Each deployed URL has its own `localStorage`, so every visitor gets an independent copy of the demo data in their own browser.
+
 ## Project structure
 
 ```text

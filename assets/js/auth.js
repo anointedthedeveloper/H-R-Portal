@@ -69,7 +69,7 @@
     },
     guard() {
       if (Auth.session()) return true;
-      const here = location.pathname.split('/').slice(App.root ? -2 : -1).join('/') + location.search;
+      const here = (document.body.dataset.file || 'dashboard.html') + location.search;
       location.replace(App.url('login.html?next=' + encodeURIComponent(here)));
       return false;
     },

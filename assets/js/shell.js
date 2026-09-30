@@ -41,9 +41,7 @@
   ];
 
   function currentPath() {
-    const parts = location.pathname.split('/').filter(Boolean);
-    const depth = (App.root.match(/\.\.\//g) || []).length;
-    return parts.slice(-(depth + 1)).join('/') || 'dashboard.html';
+    return document.body.dataset.file || 'dashboard.html';
   }
 
   function isActive(href, aliases, path) {
