@@ -2,7 +2,7 @@
 
 A frontend-only prototype of a hosting and domain management client portal, built with plain HTML, CSS and JavaScript. There's no framework, build step or backend.
 
-**This is a demo environment.** Every domain, invoice, ticket, IP address and message in it is fictional. Nothing connects to a real registrar, hosting provider, payment gateway, email server or authentication service. IP addresses use the reserved documentation ranges (RFC 5737 / RFC 3849), and external hostnames use the reserved `.invalid` TLD.
+**This is a demo environment.** Every domain, invoice, ticket, IP address and message in it is fictional. Apart from the read-only `.com`/`.net` availability and WHOIS lookups described below, nothing connects to a real registrar, hosting provider, payment gateway, email server or authentication service. IP addresses use the reserved documentation ranges (RFC 5737 / RFC 3849), and external hostnames use the reserved `.invalid` TLD.
 
 ## Demo login
 
@@ -143,6 +143,6 @@ To start over, go to **Settings > Reset demo data**. Bumping `MockData.version` 
 - **Authentication is mock only.** The credentials are in client-side JavaScript. Changing the password in Login Security doesn't change the demo sign-in, and 2FA accepts any six-digit code.
 - **Simulated actions.** Payments, domain registration and transfers, SSL issuance, backups and restores, email sending, callback requests, API keys and control panel sign-in are all simulated with short delays. No external system is contacted, and generated keys, codes and QR images are placeholders.
 - **Uploads and downloads.** The File Manager records only the name and size of uploaded files, plus the text of small text files. Downloads of backups and files are simulated. Zone files, CSV exports, the demo data JSON export and placeholder files are generated locally.
-- **Mock lookups.** Domain availability and WHOIS results are deterministic mock values. Resource charts use generated series.
+- **Lookups.** For `.com` and `.net`, domain search and WHOIS query the public Verisign RDAP registry live from the browser (results are marked **Live**). If that request fails or times out, the page falls back to simulated results. Other extensions and your own (fictional) domains always use deterministic mock data. Nothing is ever registered. Resource charts use generated series.
 - **Staff replies aren't simulated.** Tickets only change when you act on them.
 - **Invoice PDFs** are produced with the browser's print dialog.

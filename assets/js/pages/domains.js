@@ -30,12 +30,59 @@
     return h;
   }
 
-  /* Mock registry availability: deterministic so repeated searches agree. */
+  /* Live RDAP lookups for .com and .net (Verisign, public and CORS-enabled).
+     Results are cached for the page; null means the lookup failed. */
+  const RDAP_ENDPOINTS = { '.com': 'https://rdap.verisign.com/com/v1/domain/', '.net': 'https://rdap.verisign.com/net/v1/domain/' };
+  const rdapCache = {};
+
+  function rdapSupported(fqdn) {
+    return !!RDAP_ENDPOINTS[Services.tldOf(fqdn)] && fqdn.split('.').length === 2;
+  }
+
+  async function rdapLookup(fqdn) {
+    if (!rdapSupported(fqdn)) return null;
+    if (fqdn in rdapCache) return rdapCache[fqdn];
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+    let result = null;
+    try {
+      const res = await fetch(RDAP_ENDPOINTS[Services.tldOf(fqdn)] + encodeURIComponent(fqdn), { signal: controller.signal });
+      if (res.status === 404) result = { registered: false };
+      else if (res.ok) result = { registered: true, data: await res.json() };
+    } catch (e) {
+      result = null;
+    }
+    clearTimeout(timer);
+    if (result) rdapCache[fqdn] = result;
+    return result;
+  }
+
+  function parseRdap(fqdn, data) {
+    const event = (action) => ((data.events || []).find((e) => e.eventAction === action) || {}).eventDate;
+    const registrar = (data.entities || []).find((e) => (e.roles || []).indexOf('registrar') !== -1);
+    const vcard = registrar && registrar.vcardArray ? registrar.vcardArray[1] : [];
+    const fn = (vcard.find((v) => v[0] === 'fn') || [])[3];
+    return {
+      name: fqdn,
+      registrar: fn || 'Unknown registrar',
+      registered: (event('registration') || '').slice(0, 10),
+      expires: (event('expiration') || '').slice(0, 10),
+      updated: event('last changed'),
+      statuses: (data.status || []).map((st) => st.replace(/ (\w)/g, (m, c) => c.toUpperCase())),
+      nameservers: (data.nameservers || []).map((n) => String(n.ldhName || '').toLowerCase()).filter(Boolean),
+      dnssec: !!(data.secureDNS && data.secureDNS.delegationSigned)
+    };
+  }
+
+  /* Availability: owned domains, then cached live RDAP results, then a
+     deterministic mock for extensions without a live lookup. */
   function availability(fqdn) {
     const owned = Services.domain(fqdn);
     if (owned) return { available: false, reason: 'In your account' };
     const tld = Services.tldOf(fqdn);
     const label = fqdn.slice(0, -tld.length);
+    const live = rdapCache[fqdn];
+    if (live) return live.registered ? { available: false, reason: 'Registered', live: true } : { available: true, premium: false, live: true };
     const h = hashOf(fqdn);
     if (tld === '.com' && (label.length <= 10 || h % 2 === 0)) return { available: false, reason: 'Registered' };
     if (tld !== '.com' && h % 9 === 0) return { available: false, reason: 'Registered' };
@@ -289,7 +336,7 @@
       const price = Services.priceFor(tld);
       const register = status.premium ? price.register * 12 : price.register;
       return '<div class="domain-result' + (status.available ? '' : ' unavailable') + (primary ? ' primary-result' : '') + '">' +
-        '<span class="name">' + esc(fqdn) + (status.premium ? ' <span class="badge badge-neutral">Premium</span>' : '') + '</span>' +
+        '<span class="name">' + esc(fqdn) + (status.premium ? ' <span class="badge badge-neutral">Premium</span>' : '') + (status.live ? ' <span class="tag" data-tooltip="Checked against the live registry">Live</span>' : '') + '</span>' +
         (status.available ? View.badge('Available') : View.badge(status.reason === 'In your account' ? 'In your account' : 'Unavailable', 'neutral')) +
         '<span class="price">' + (status.available ? fmt.money(register) + '<small>renews at ' + fmt.money(price.renew) + '/yr</small>' : '<small>&nbsp;</small>') + '</span>' +
         (status.available
@@ -312,18 +359,20 @@
       if (!LABEL_RE.test(label)) { errorEl.textContent = 'Use letters, numbers and hyphens only (no spaces), and do not start or end with a hyphen.'; return; }
       lastQuery = query;
       App.setParam('q', query);
-      results.innerHTML = View.panel({ title: 'Checking availability...', body: View.skeleton(5) });
-      await Util.delay(650);
+      results.innerHTML = View.panel({ title: 'Checking availability...', subtitle: 'Querying the .com and .net registry', body: View.skeleton(5) });
       const primaryTld = requestedTld || '.com';
       const list = [label + primaryTld].concat(tlds.filter((t) => t !== primaryTld).map((t) => label + t));
       const suggestions = ['get' + label + '.com', label + 'hq.com', label + '-online.com', label + 'group.net'].filter((s) => LABEL_RE.test(s.split('.')[0]));
+      await Promise.all([Util.delay(400)].concat(list.concat(suggestions).filter((f) => !Services.domain(f)).map(rdapLookup)));
+      if (lastQuery !== query) return;
+      const liveCount = list.concat(suggestions).filter((f) => availability(f).live).length;
       results.innerHTML = View.panel({
         title: 'Results for "' + label + '"',
         subtitle: list.filter((f) => availability(f).available).length + ' of ' + list.length + ' extensions available',
         flush: true,
         body: list.map((f, i) => resultRow(f, i === 0)).join('')
       }) + '<div class="section">' + View.panel({ title: 'Suggestions', flush: true, body: suggestions.map((s) => resultRow(s)).join('') }) + '</div>' +
-      View.demoNote('Availability is simulated and deterministic for the demo. No registry or WHOIS server is queried.');
+      View.demoNote(liveCount ? 'Results marked Live (.com and .net) come from the public Verisign RDAP registry. Other extensions are simulated in this demo, and nothing is actually registered.' : 'Availability is simulated for this demo. The live registry lookup for .com and .net could not be reached.');
     }
 
     root.querySelector('#search-form').addEventListener('submit', (e) => { e.preventDefault(); search(input.value); });
@@ -878,7 +927,7 @@
     const initial = App.param('domain') || (Services.domains()[0] || {}).name || '';
     root.innerHTML = View.pageHeader({
       title: 'WHOIS Lookup',
-      description: 'Registration details as published in WHOIS/RDAP. All records on this page are mock data.',
+      description: 'Registration details as published in WHOIS/RDAP. .com and .net domains outside your account are looked up live; everything else is mock data.',
       crumbs: [['Domains', 'domains/index.html'], ['WHOIS']]
     }) +
     View.panel({ body: '<form id="whois-form" class="search-hero" novalidate><label class="sr-only" for="whois-q">Domain</label><input id="whois-q" class="input mono" value="' + esc(initial) + '" placeholder="example.com" spellcheck="false"><button class="btn btn-primary btn-lg" type="submit">' + icon('search', 15) + 'Lookup</button></form>' +
@@ -896,8 +945,10 @@
       result.innerHTML = View.panel({ title: 'Querying WHOIS...', body: View.skeleton(8) });
       await Util.delay(500);
       const owned = Services.domain(name);
+      const live = owned ? null : await rdapLookup(name);
+      if (live && live.registered) { renderLive(parseRdap(name, live.data)); return; }
       if (!owned && availability(name).available) {
-        result.innerHTML = View.panel({ title: name, body: View.empty({ icon: 'search', title: 'No match for "' + name + '"', text: 'This domain does not appear to be registered (mock result).', action: '<a class="btn btn-primary btn-sm" href="' + App.url('domains/search.html?q=' + encodeURIComponent(name)) + '">Register it</a>' }) });
+        result.innerHTML = View.panel({ title: name, body: View.empty({ icon: 'search', title: 'No match for "' + name + '"', text: live ? 'This domain is not registered (live registry result).' : 'This domain does not appear to be registered (mock result).', action: '<a class="btn btn-primary btn-sm" href="' + App.url('domains/search.html?q=' + encodeURIComponent(name)) + '">Register it</a>' }) });
         return;
       }
       const d = owned || {
@@ -930,6 +981,25 @@
           ['Privacy Protection', privacy ? 'Enabled' : (owned && !privacySupported(d) ? 'Not available for this TLD' : '<strong>Disabled</strong> - contact details are public')]
         ]) + (owned ? '<div class="flex mt-16"><a class="btn btn-secondary btn-sm" href="' + App.url('domains/index.html?manage=' + encodeURIComponent(d.name)) + '">Manage domain</a></div>' : '') }) +
         '</div>';
+    }
+
+    function renderLive(d) {
+      const text = ['% Live RDAP data from the Verisign registry', '',
+        'Domain Name: ' + d.name.toUpperCase(), 'Registrar: ' + d.registrar,
+        'Creation Date: ' + (d.registered || '-'), 'Registry Expiry Date: ' + (d.expires || '-'), 'Updated Date: ' + (d.updated || '-'),
+        d.statuses.map((st) => 'Domain Status: ' + st).join('\n'), d.nameservers.map((n) => 'Name Server: ' + n.toUpperCase()).join('\n'),
+        'DNSSEC: ' + (d.dnssec ? 'signedDelegation' : 'unsigned'), '', 'Registrant contact details are not published by the .com/.net registry.'].join('\n');
+      result.innerHTML = '<div class="grid grid-main">' +
+        View.panel({ title: 'Registry record', subtitle: 'Live RDAP data', actions: '<button type="button" class="btn btn-secondary btn-sm" data-copy="' + esc(text) + '">' + icon('copy', 14) + 'Copy</button>', body: '<pre class="whois-block">' + esc(text) + '</pre>' }) +
+        View.panel({ title: 'Summary', actions: '<span class="tag">Live</span>', body: View.kv([
+          ['Domain', '<strong>' + esc(d.name) + '</strong>'],
+          ['Registrar', esc(d.registrar)],
+          ['Registration Date', d.registered ? fmt.date(d.registered) : '-'],
+          ['Expiration Date', d.expires ? fmt.date(d.expires) : '-'],
+          ['Status', d.statuses.map((st) => '<span class="mono">' + esc(st) + '</span>').join('<br>') || '-'],
+          ['Nameservers', d.nameservers.map((n) => '<span class="mono">' + esc(n) + '</span>').join('<br>') || '-'],
+          ['Privacy Protection', 'Contact data is held by the registrar, not the registry']
+        ]) }) + '</div>';
     }
 
     form.addEventListener('submit', (e) => { e.preventDefault(); lookup(input.value); });
