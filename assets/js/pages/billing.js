@@ -20,12 +20,12 @@
       '<div class="text-right"><span class="watermark">' + esc(status) + '</span>' + (inv.paidOn ? '<p class="muted small mt-8 mb-0">Paid ' + fmt.date(inv.paidOn) + ' via ' + esc(inv.method) + '</p>' : '') + '</div></div>' +
       '<div class="invoice-parties">' +
         '<div><h4>Billed to</h4><strong>' + esc(profile.company) + '</strong><br>' + esc(profile.name) + '<br>' + esc(profile.address) + '<br>' + esc(profile.city) + ' ' + esc(profile.postcode) + '<br>' + esc(profile.country) + (profile.vatNumber ? '<br>VAT ' + esc(profile.vatNumber) : '') + '</div>' +
-        '<div><h4>From</h4><strong>H&amp;R Portal (Demo Environment)</strong><br>Fictional provider for demonstration<br>No real charges are made<br>Customer ' + esc(profile.customerId) + '</div>' +
+        '<div><h4>From</h4><strong>H&amp;R Portal</strong><br>Hosting &amp; Registrar Services<br>billing@portal.invalid<br>Customer ' + esc(profile.customerId) + '</div>' +
       '</div>' +
       '<div class="table-wrap"><table class="table"><thead><tr><th>Description</th><th class="align-right">Amount</th></tr></thead><tbody>' +
         inv.items.map((i) => '<tr><td>' + esc(i.description) + '</td><td class="align-right nowrap">' + fmt.money(i.amount) + '</td></tr>').join('') +
       '</tbody></table></div>' +
-      '<dl class="kv invoice-totals"><div class="kv-row"><dt>Subtotal</dt><dd class="text-right">' + fmt.money(total) + '</dd></div><div class="kv-row"><dt>Tax (0%, demo)</dt><dd class="text-right">' + fmt.money(0) + '</dd></div>' +
+      '<dl class="kv invoice-totals"><div class="kv-row"><dt>Subtotal</dt><dd class="text-right">' + fmt.money(total) + '</dd></div><div class="kv-row"><dt>Tax (0%)</dt><dd class="text-right">' + fmt.money(0) + '</dd></div>' +
         '<div class="kv-row total"><dt>Total</dt><dd class="text-right">' + fmt.money(total) + '</dd></div>' +
         '<div class="kv-row"><dt>Balance due</dt><dd class="text-right">' + fmt.money(isOpen(inv) ? total : 0) + '</dd></div></dl>' +
     '</div>';
@@ -55,7 +55,7 @@
         methods.map((m) => '<label class="radio"><input type="radio" name="method" value="' + m.id + '"' + (m.id === defaultMethod ? ' checked' : '') + '><span><strong>' + esc(Services.paymentMethodLabel(m)) + '</strong><small>' + (m.type === 'Bank transfer' ? 'Manual transfer, 1-3 business days' : 'Expires ' + esc(m.expiry) + ' - ' + esc(m.holder)) + (m.isDefault ? ' - default' : '') + '</small></span></label>').join('') +
       '</div></fieldset>' +
       (credit > 0 ? '<label class="checkbox"><input type="checkbox" name="credit" checked><span>Apply account credit (' + fmt.money(credit) + ')</span></label>' : '') +
-      '<div class="record-box" id="pay-summary"></div></form>' + View.demoNote('Demo environment: no payment gateway is contacted and no card is charged.');
+      '<div class="record-box" id="pay-summary"></div></form>';
     const dialog = UI.modal({
       title: 'Pay invoice', size: 'md', body,
       actions: [{ label: 'Cancel', variant: 'secondary' }, { label: 'Pay now', variant: 'primary', loadingText: 'Processing payment...', onClick: (api) => submit(api) }]
@@ -94,7 +94,7 @@
         UI.modal({
           title: 'Payment successful', size: 'sm',
           body: '<p><strong>' + esc(inv.id) + '</strong> (' + fmt.money(total) + ') is paid: ' + fmt.money(charged) + ' charged to ' + esc(Services.paymentMethodLabel(method)) + (applied ? ' and ' + fmt.money(applied) + ' account credit applied' : '') + '.</p>' +
-            (result.effects.length ? '<ul class="article-body">' + result.effects.map((e) => '<li>' + esc(e) + '</li>').join('') + '</ul>' : '') + View.demoNote('Simulated payment. No money was moved.'),
+            (result.effects.length ? '<ul class="article-body">' + result.effects.map((e) => '<li>' + esc(e) + '</li>').join('') + '</ul>' : ''),
           actions: [{ label: 'Done', variant: 'primary' }],
           onClose: () => { if (onDone) onDone(); }
         });
@@ -280,7 +280,7 @@
         View.panel({ title: 'Saved payment methods', flush: true, body: '<ul class="list">' + methods.map((m) =>
           '<li class="list-item"><span class="list-icon">' + icon(m.type === 'Bank transfer' ? 'database' : 'card', 14) + '</span><span class="list-item-main"><span class="list-item-title">' + esc(Services.paymentMethodLabel(m)) + (m.isDefault ? ' ' + View.badge('Default', 'ok') : '') + '</span><span class="list-item-sub">' + (m.expiry ? 'Expires ' + esc(m.expiry) + ' - ' : '') + esc(m.holder) + '</span></span>' +
           UI.menu([{ action: 'default', label: 'Set as default', icon: 'check', disabled: m.isDefault || m.type === 'Bank transfer', data: ' data-method="' + m.id + '"' }, { action: 'remove', label: 'Remove', icon: 'trash', danger: true, disabled: m.isDefault, data: ' data-method="' + m.id + '"' }], { label: 'Actions for ' + Services.paymentMethodLabel(m) }) + '</li>').join('') + '</ul>' }) +
-        View.panel({ title: 'Automatic payments', body: '<p>Charge the default method automatically on each invoice due date.</p>' + View.switchControl({ checked: autopay, label: autopay ? 'Enabled' : 'Disabled', data: 'data-autopay' }) + View.demoNote('Card details are never stored or transmitted in the demo; only a label and the last four digits are kept locally.') }) +
+        View.panel({ title: 'Automatic payments', body: '<p>Charge the default method automatically on each invoice due date.</p>' + View.switchControl({ checked: autopay, label: autopay ? 'Enabled' : 'Disabled', data: 'data-autopay' }) }) +
         '</div>';
     }
 
@@ -300,7 +300,7 @@
       ],
       actions: (t) => [{ action: 'receipt', label: 'Receipt', primary: true, disabled: t.status !== 'Completed' }],
       onAction: (action, t) => {
-        UI.modal({ title: 'Payment receipt', subtitle: t.id, size: 'sm', body: View.kv([['Date', fmt.datetime(t.date)], ['Description', esc(t.description)], ['Method', esc(t.method)], ['Amount', '<strong>' + fmt.money(t.amount) + '</strong>'], ['Status', View.badge(t.status)]]) + View.demoNote('Demo receipt. No payment was processed.'),
+        UI.modal({ title: 'Payment receipt', subtitle: t.id, size: 'sm', body: View.kv([['Date', fmt.datetime(t.date)], ['Description', esc(t.description)], ['Method', esc(t.method)], ['Amount', '<strong>' + fmt.money(t.amount) + '</strong>'], ['Status', View.badge(t.status)]]),
           actions: [{ label: 'Close', variant: 'secondary' }, { label: 'Print', variant: 'primary', icon: 'printer', onClick: () => { window.print(); return false; } }] });
       }
     });
@@ -333,8 +333,7 @@
       if (!e.target.closest('[data-add-card]')) return;
       UI.formModal({
         title: 'Add card',
-        intro: 'Use a test number such as 4242 4242 4242 4242. Nothing is sent to a payment processor.',
-        fields: [
+                fields: [
           { name: 'holder', label: 'Cardholder name', required: true, autocomplete: 'off', value: Store.get('profile').name },
           { name: 'number', label: 'Card number', required: true, autocomplete: 'off', mono: true, placeholder: '4242 4242 4242 4242', validate: (v) => { const n = v.replace(/\s+/g, ''); return /^\d{13,19}$/.test(n) && luhn(n) ? '' : 'Enter a valid card number.'; } },
           { name: 'expiry', label: 'Expiry (MM/YY)', required: true, half: true, autocomplete: 'off', placeholder: '08/29', validate: (v) => {

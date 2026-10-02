@@ -281,7 +281,7 @@
         render(content);
       } catch (error) {
         console.error(error);
-        content.innerHTML = View.errorState('Something went wrong', 'The page failed to render. Reset demo data from Settings if the problem persists.');
+        content.innerHTML = View.errorState('Something went wrong', 'The page failed to render. Reset data from Settings if the problem persists.');
       }
     }
   };

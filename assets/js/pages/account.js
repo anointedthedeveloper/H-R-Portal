@@ -26,7 +26,7 @@
     const body = header(root, { title: 'Profile', description: 'Account holder details used on invoices and domain registrations.' });
     const fields = [
       { name: 'name', label: 'Full name', required: true, half: true, autocomplete: 'name', validate: (v) => v.length < 2 ? 'Enter your full name.' : '' },
-      { name: 'email', label: 'Email', type: 'email', required: true, half: true, autocomplete: 'email', hint: 'Demo: the sign-in email does not change.' },
+      { name: 'email', label: 'Email', type: 'email', required: true, half: true, autocomplete: 'email' },
       { name: 'phone', label: 'Phone', half: true, autocomplete: 'tel', validate: (v) => !v || /^\+?[\d\s()-]{7,20}$/.test(v) ? '' : 'Enter a valid phone number.' },
       { name: 'company', label: 'Company', half: true, autocomplete: 'organization' },
       { name: 'vatNumber', label: 'VAT / Tax ID', half: true },
@@ -128,7 +128,7 @@
         }
         if (action === 'resend') {
           App.log('Account', 'Invitation resent', u.email);
-          UI.toast('Invitation resent to ' + u.email + ' (simulated).');
+          UI.toast('Invitation resent to ' + u.email + '');
         }
         if (action === 'remove' && await UI.confirm({ title: u.status === 'Invited' ? 'Revoke invitation' : 'Remove user', message: (u.status === 'Invited' ? 'Revoke the invitation for ' : 'Remove access for ') + u.name + ' (' + u.email + ')? Their active sessions end immediately.', confirmLabel: 'Remove', danger: true })) {
           Store.remove('teamMembers', u.id);
@@ -164,7 +164,7 @@
         onSubmit: (values) => {
           Store.update('teamMembers', (list) => { list.push({ id: uid('u'), name: values.name, email: values.email.toLowerCase(), role: values.role, status: 'Invited', lastActive: null, twoFactor: false }); });
           App.log('Account', 'User invited', values.email + ' (' + values.role + ')');
-          UI.toast('Invitation sent to ' + values.email + ' (simulated).');
+          UI.toast('Invitation sent to ' + values.email + '');
           table.refresh();
         }
       });
@@ -232,7 +232,7 @@
         Shell.refreshNotifications(); render();
       }
       if (e.target.closest('[data-test]')) {
-        App.notify('Test notification', 'Delivered to the portal. Email and SMS delivery is simulated in the demo.', 'account/notifications.html');
+        App.notify('Test notification', 'Delivered to the portal. Email and SMS copies follow your preferences.', 'account/notifications.html');
         UI.toast('Test notification sent.');
         render();
       }
@@ -252,7 +252,7 @@
 
   /* ---------- API access ---------- */
   App.page('account.api', (root) => {
-    const body = header(root, { title: 'API Access', description: 'Keys for automating domain, DNS and hosting tasks. Keys created here are demo values and do not authenticate against any service.', actions: '<button type="button" class="btn btn-primary" data-create>' + icon('plus', 14) + 'Create API key</button>' });
+    const body = header(root, { title: 'API Access', description: 'Keys for automating domain, DNS and hosting tasks.', actions: '<button type="button" class="btn btn-primary" data-create>' + icon('plus', 14) + 'Create API key</button>' });
     body.innerHTML = '<div class="panel" id="key-table"></div><div class="grid grid-2 section" id="api-extra"></div>';
 
     const table = UI.DataTable(body.querySelector('#key-table'), {
@@ -299,7 +299,7 @@
           UI.fieldHTML({ name: 'ipRestriction', label: 'Allowed source IPs (comma separated, CIDR allowed)', value: settings.ipRestriction, mono: true, hint: 'Leave empty to allow any address.' }) +
           View.kv([['Rate limit', esc(settings.rateLimit)], ['Base URL', '<span class="mono">https://api.portal.invalid/v1</span>']]) +
           '<button type="submit" class="btn btn-secondary">Save restrictions</button></form>' }) +
-        View.panel({ title: 'Example request', body: '<pre>curl https://api.portal.invalid/v1/domains \\\n  -H "Authorization: Bearer $API_KEY"</pre><pre>{\n  "data": [\n    { "name": "exampleclient.com", "status": "active",\n      "expires": "2026-12-18", "auto_renew": true }\n  ]\n}</pre>' + View.demoNote('The .invalid domain is reserved and never resolves. This API does not exist.') });
+        View.panel({ title: 'Example request', body: '<pre>curl https://api.portal.invalid/v1/domains \\\n  -H "Authorization: Bearer $API_KEY"</pre><pre>{\n  "data": [\n    { "name": "exampleclient.com", "status": "active",\n      "expires": "2026-12-18", "auto_renew": true }\n  ]\n}</pre>' });
     }
 
     body.addEventListener('submit', (e) => {
@@ -327,7 +327,7 @@
         onSubmit: (values) => {
           const scopes = Array.from(dialog.el.querySelectorAll('#scope-list input:checked')).map((i) => i.value);
           if (!scopes.length) return 'Select at least one scope.';
-          const prefix = 'demo_' + Util.randomHex(4);
+          const prefix = 'hrp_' + Util.randomHex(4);
           const key = prefix + '_' + Util.randomHex(32);
           Store.prepend('apiKeys', { id: uid('k'), name: values.name, prefix, created: fmt.isoDate(App.now()), lastUsed: null, scopes, status: 'Active', expiry: values.expiry });
           Store.prepend('securityLogs', { id: uid('sl'), date: fmt.isoDateTime(App.now()), event: 'API key created', detail: 'Key "' + values.name + '" with ' + scopes.join(', '), ip: '198.51.100.42', severity: 'Notice', user: Store.get('profile').name });
@@ -336,8 +336,7 @@
           setTimeout(() => {
             UI.modal({
               title: 'API key created', dismissible: false,
-              body: '<p>Copy this key now. For security it will not be shown again.</p><div class="token-box"><span>' + esc(key) + '</span><button type="button" class="icon-btn" data-copy="' + esc(key) + '" aria-label="Copy key">' + icon('copy') + '</button></div>' +
-                View.demoNote('This is a random demo value. It does not authenticate against any service.'),
+              body: '<p>Copy this key now. For security it will not be shown again.</p><div class="token-box"><span>' + esc(key) + '</span><button type="button" class="icon-btn" data-copy="' + esc(key) + '" aria-label="Copy key">' + icon('copy') + '</button></div>',
               actions: [{ label: 'I have copied the key', variant: 'primary' }]
             });
           }, 0);
@@ -382,7 +381,7 @@
 
   /* ---------- Settings ---------- */
   App.page('account.settings', (root) => {
-    const body = header(root, { title: 'Account Settings', description: 'Display preferences, demo data management and account options.' });
+    const body = header(root, { title: 'Account Settings', description: 'Display preferences, data management and account options.' });
 
     function storageSize() {
       let total = 0;
@@ -402,11 +401,10 @@
             UI.fieldHTML({ name: 'rowsPerPage', label: 'Rows per table page', type: 'select', value: prefs.rowsPerPage, half: true, options: [10, 15, 25, 50] }) +
             UI.fieldHTML({ name: 'landingPage', label: 'Page after sign-in', type: 'select', value: prefs.landingPage, options: landing }) +
             '<div class="form-actions"><button type="submit" class="btn btn-primary">Save preferences</button></div></form>' }) +
-          View.panel({ title: 'Demo data', subtitle: 'All portal data lives in this browser only', body: View.kv([
+          View.panel({ title: 'Data', subtitle: 'Export or reset your account data', body: View.kv([
               ['Storage used', fmt.bytes(storageSize())],
-              ['Data set version', String(MockData.version)],
-              ['Demo date', fmt.date(MockData.demoDate) + ' (fixed so dates stay consistent)']
-            ]) + '<div class="flex flex-wrap mt-16"><button type="button" class="btn btn-secondary btn-sm" data-export>' + icon('download', 14) + 'Export data (JSON)</button><button type="button" class="btn btn-danger btn-sm" data-reset>' + icon('refresh', 14) + 'Reset demo data</button></div>' }) +
+              ['Data set version', String(MockData.version)]
+            ]) + '<div class="flex flex-wrap mt-16"><button type="button" class="btn btn-secondary btn-sm" data-export>' + icon('download', 14) + 'Export data (JSON)</button><button type="button" class="btn btn-danger btn-sm" data-reset>' + icon('refresh', 14) + 'Reset data</button></div>' }) +
         '</div>' +
         '<div class="stack">' +
           View.panel({ title: 'Session', body: View.kv([['Signed in as', esc(session.email)], ['Remember me', session.remember ? 'Yes (30 days)' : 'No (8 hours)'], ['Session expires', new Date(session.expiresAt).toLocaleString()]]) + '<button type="button" class="btn btn-secondary btn-sm mt-8" data-logout>' + icon('logout', 14) + 'Logout</button>' }) +
@@ -431,20 +429,20 @@
         const names = Object.keys(MockData).filter((k) => typeof MockData[k] === 'object');
         const data = {};
         names.forEach((n) => { data[n] = Store.get(n); });
-        Util.downloadText('hr-portal-demo-data.json', JSON.stringify(data, null, 2), 'application/json');
-        UI.toast('Demo data exported.', 'info');
+        Util.downloadText('hr-portal-data.json', JSON.stringify(data, null, 2), 'application/json');
+        UI.toast('Data exported.', 'info');
       }
       if (e.target.closest('[data-reset]')) {
-        if (!(await UI.confirm({ title: 'Reset demo data', message: 'Restore every domain, invoice, ticket, file and setting to its original demo state? Your session stays signed in.', confirmLabel: 'Reset data', danger: true, requireText: 'RESET' }))) return;
+        if (!(await UI.confirm({ title: 'Reset data', message: 'Restore every domain, invoice, ticket, file and setting to its original state? Your session stays signed in.', confirmLabel: 'Reset data', danger: true, requireText: 'RESET' }))) return;
         Store.clearData();
         try { Object.keys(localStorage).filter((k) => k.indexOf('hrp:ui:') === 0).forEach((k) => localStorage.removeItem(k)); } catch (err) { /* storage unavailable */ }
-        UI.toast('Demo data reset.');
+        UI.toast('Data reset.');
         setTimeout(() => location.reload(), 500);
       }
       if (e.target.closest('[data-close]')) {
         if (!(await UI.confirm({ title: 'Request account closure', message: 'Submit a closure request? Our billing team will contact you to confirm before anything is cancelled.', confirmLabel: 'Submit request', danger: true, requireText: Store.get('profile').customerId }))) return;
         App.log('Account', 'Account closure requested', Store.get('profile').customerId);
-        UI.toast('Closure request submitted. Demo action completed successfully; nothing was cancelled.');
+        UI.toast('Closure request submitted.');
       }
     });
     render();

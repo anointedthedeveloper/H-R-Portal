@@ -72,7 +72,7 @@
     return '<div class="sidebar-brand"><a href="' + App.url('dashboard.html') + '" class="brand">' + brandMark() + '<span class="brand-text"><strong>H&amp;R Portal</strong><small>Hosting &amp; Registrar</small></span></a>' +
       '<button type="button" class="icon-btn sidebar-close" data-sidebar-close aria-label="Close navigation">' + icon('x') + '</button></div>' +
       '<nav class="sidebar-nav" aria-label="Main navigation"><ul>' + items + '</ul></nav>' +
-      '<div class="sidebar-footer"><span class="env-tag">Demo Environment</span><span class="sidebar-version">Portal build 2026.09</span></div>';
+      '<div class="sidebar-footer"><span class="sidebar-version">Portal build 2026.09</span></div>';
   }
 
   function brandMark() {
@@ -93,7 +93,6 @@
         '<div class="dropdown-menu search-results" id="global-search-results" role="listbox"></div>' +
       '</div>' +
       '<div class="header-actions">' +
-        '<span class="env-tag env-tag-header" data-tooltip="All data is fictional and stored in this browser">Demo Environment</span>' +
         '<div class="dropdown" id="help-menu"><button type="button" class="icon-btn" data-dropdown-toggle aria-haspopup="true" aria-expanded="false" aria-label="Help">' + icon('help', 18) + '</button>' +
           '<div class="dropdown-menu dropdown-right" role="menu">' +
             '<div class="menu-heading">Help</div>' +

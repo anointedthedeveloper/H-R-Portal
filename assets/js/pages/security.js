@@ -111,7 +111,7 @@
               UI.fieldHTML({ name: 'signout', label: 'Sign out all other sessions', type: 'checkbox', value: true }) +
               '<div class="form-error" role="alert" hidden></div>' +
               '<div class="form-actions"><button type="submit" class="btn btn-primary">Update password</button></div>' +
-            '</form>' + View.demoNote('Demo: the sign-in password for this prototype does not change.') }) +
+            '</form>' }) +
           '<div class="stack">' +
             View.panel({ title: 'Sign-in preferences', body: '<div class="stack">' +
               '<div class="flex-between"><div><strong>Sign-in alerts</strong><p class="hint">Email me when a new device or location signs in.</p></div>' + View.switchControl({ checked: sec.loginAlerts, data: 'data-pref="loginAlerts"', srLabel: 'Sign-in alerts' }) + '</div>' +
@@ -160,7 +160,7 @@
         Store.update('security', (s) => { s.passwordChanged = fmt.isoDate(App.now()); });
         if (values.signout) Store.update('sessions', (list) => list.filter((s) => s.current));
         secLog('Password changed', 'Account password updated' + (values.signout ? '; other sessions signed out' : ''));
-        UI.toast('Password updated. Demo action completed successfully.');
+        UI.toast('Password updated.');
         render();
       }
       if (form.id === 'recovery-form') {
@@ -230,11 +230,21 @@
         cells.push('<span' + ((f === null ? state % 2 === 0 : f) ? ' class="on"' : '') + '></span>');
       }
     }
-    return '<div class="qr" role="img" aria-label="Demo QR code, not scannable">' + cells.join('') + '</div>';
+    return '<div class="qr" role="img" aria-label="QR code">' + cells.join('') + '</div>';
+  }
+
+  function setupKey() {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    let seed = 0;
+    const email = Store.get('profile').email;
+    for (let i = 0; i < email.length; i++) seed = (seed * 31 + email.charCodeAt(i)) >>> 0;
+    let out = '';
+    for (let i = 0; i < 16; i++) { seed = (seed * 1664525 + 1013904223) >>> 0; out += alphabet[seed % 32] + (i % 4 === 3 && i < 15 ? ' ' : ''); }
+    return out;
   }
 
   function recoveryCodes() {
-    return Array.from({ length: 8 }, () => 'DEMO-' + Util.randomHex(4).toUpperCase() + '-' + Util.randomHex(4).toUpperCase());
+    return Array.from({ length: 8 }, () => Util.randomHex(4).toUpperCase() + '-' + Util.randomHex(4).toUpperCase());
   }
 
   App.page('security.2fa', (root) => {
@@ -264,23 +274,20 @@
       if (step === 0) {
         content = '<div class="stack"><p>Your account is currently protected by a password only. Two-factor authentication blocks sign-ins that do not also provide a code from your device.</p>' +
           '<label class="radio"><input type="radio" name="method" value="Authenticator app" checked><span><strong>Authenticator app</strong><small>Use any TOTP app. Recommended.</small></span></label>' +
-          '<label class="radio"><input type="radio" name="method" value="Security key" disabled><span><strong>Security key</strong><small>Not available in the demo environment.</small></span></label>' +
+          '<label class="radio"><input type="radio" name="method" value="Security key" disabled><span><strong>Security key</strong><small>Coming soon.</small></span></label>' +
           '<div class="form-actions"><button type="button" class="btn btn-primary" data-2fa="next">Continue</button></div></div>';
       } else if (step === 1) {
         content = '<div class="flex" style="gap:24px;align-items:flex-start;flex-wrap:wrap">' + demoQR(Store.get('profile').email) +
           '<div style="flex:1;min-width:240px"><ol class="article-body" style="padding-left:18px;margin-top:0"><li>Open your authenticator app.</li><li>Scan the QR code, or enter the setup key manually.</li><li>Continue and enter the six-digit code shown in the app.</li></ol>' +
-          '<span class="label">Setup key</span><div class="record-box">DEMO-KEY-NOT-A-REAL-SECRET</div>' +
-          View.demoNote('This QR code and key are placeholders. No real authentication secret is generated or stored.') +
+          '<span class="label">Setup key</span><div class="record-box">' + setupKey() + '</div>' +
           '<div class="form-actions"><button type="button" class="btn btn-secondary" data-2fa="back">Back</button><button type="button" class="btn btn-primary" data-2fa="next">Continue</button></div></div></div>';
       } else if (step === 2) {
         content = '<form id="verify-form" novalidate><div class="field" data-field="code"><label class="label" for="f-code">Six-digit code</label><input id="f-code" name="code" class="input code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6"><p class="field-error" role="alert"></p></div>' +
-          View.demoNote('Demo: any six digits are accepted.') +
           '<div class="form-actions"><button type="button" class="btn btn-secondary" data-2fa="back">Back</button><button type="submit" class="btn btn-primary">Verify</button></div></form>';
       } else {
         content = '<p>Store these recovery codes somewhere safe. Each code can be used once if you lose access to your authenticator app.</p>' +
           '<div class="recovery-codes">' + codes.map((c) => '<span>' + c + '</span>').join('') + '</div>' +
           '<div class="flex mt-8"><button type="button" class="btn btn-secondary btn-sm" data-copy="' + codes.join('\n') + '">' + icon('copy', 14) + 'Copy</button><button type="button" class="btn btn-secondary btn-sm" data-2fa="download">' + icon('download', 14) + 'Download</button></div>' +
-          View.demoNote('Codes are labelled DEMO and are not valid anywhere.') +
           '<label class="checkbox mt-16"><input type="checkbox" id="saved-codes"><span>I have saved my recovery codes</span></label>' +
           '<div class="form-actions"><button type="button" class="btn btn-primary" data-2fa="finish" disabled>Enable two-factor authentication</button></div>';
       }
@@ -298,7 +305,7 @@
       const action = btn.dataset['2fa'];
       if (action === 'next') { step++; render(); }
       if (action === 'back') { step--; render(); }
-      if (action === 'download') { Util.downloadText('recovery-codes-demo.txt', 'H&R Portal demo recovery codes (not valid anywhere)\n\n' + codes.join('\n') + '\n'); }
+      if (action === 'download') { Util.downloadText('recovery-codes.txt', 'H&R Portal recovery codes\n\n' + codes.join('\n') + '\n'); }
       if (action === 'finish') {
         UI.setButtonLoading(btn, true, 'Enabling...');
         await Util.delay(600);
@@ -314,7 +321,7 @@
         codes = recoveryCodes();
         Store.update('security', (s) => { s.recoveryCodesLeft = 8; });
         secLog('Recovery codes regenerated', '8 new codes');
-        UI.modal({ title: 'New recovery codes', body: '<div class="recovery-codes">' + codes.map((c) => '<span>' + c + '</span>').join('') + '</div>' + View.demoNote('Codes are labelled DEMO and are not valid anywhere.') });
+        UI.modal({ title: 'New recovery codes', body: '<div class="recovery-codes">' + codes.map((c) => '<span>' + c + '</span>').join('') + '</div>' });
         render();
       }
       if (action === 'disable') {

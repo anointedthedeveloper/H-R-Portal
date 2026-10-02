@@ -49,7 +49,7 @@
         { name: 'subject', label: 'Subject', required: true, value: p.subject || '', maxlength: 140, validate: (v) => v.length < 6 ? 'Please describe the issue in a few words.' : '' },
         { name: 'message', label: 'Message', type: 'textarea', rows: 7, required: true, validate: (v) => v.length < 20 ? 'Please include more detail (at least 20 characters).' : '', hint: 'Include URLs, error messages and steps to reproduce. Never include passwords.' }
       ],
-      after: '<div class="field mt-16"><label class="label" for="ticket-files">Attachments</label><input type="file" id="ticket-files" multiple class="input" style="padding:4px"><p class="hint">Only file names are recorded in the demo.</p></div>',
+      after: '<div class="field mt-16"><label class="label" for="ticket-files">Attachments</label><input type="file" id="ticket-files" multiple class="input" style="padding:4px"></div>',
       submitLabel: 'Submit ticket',
       loadingText: 'Submitting...',
       onSubmit: (values, dialog) => {
@@ -155,8 +155,7 @@
           ((m.attachments || []).length ? '<div class="panel-footer">' + m.attachments.map((a) => '<span class="tag">' + icon('file', 12) + ' ' + esc(a) + '</span>').join(' ') + '</div>' : '') + '</article>').join('') + '</div>' +
         (closed ? View.alert('info', 'This ticket is closed. Reopen it to add a reply.') :
           View.panel({ title: 'Reply', body: '<form id="reply-form" novalidate><div class="field" data-field="reply"><label class="sr-only" for="reply">Reply</label><textarea id="reply" name="reply" class="textarea" rows="6" placeholder="Write your reply..."></textarea><p class="field-error" role="alert"></p></div>' +
-            '<div class="flex-between mt-8 flex-wrap"><label class="checkbox"><input type="checkbox" name="resolve"><span>Mark as resolved after sending</span></label><div class="flex"><input type="file" id="reply-files" multiple class="sr-only"><label for="reply-files" class="btn btn-secondary btn-sm" tabindex="0" role="button">' + icon('upload', 14) + 'Attach</label><span id="reply-file-names" class="small muted"></span><button type="submit" class="btn btn-primary">' + icon('send', 14) + 'Send reply</button></div></div></form>' +
-            View.demoNote('Replies are stored locally. Staff responses are not simulated in the demo environment.') })) +
+            '<div class="flex-between mt-8 flex-wrap"><label class="checkbox"><input type="checkbox" name="resolve"><span>Mark as resolved after sending</span></label><div class="flex"><input type="file" id="reply-files" multiple class="sr-only"><label for="reply-files" class="btn btn-secondary btn-sm" tabindex="0" role="button">' + icon('upload', 14) + 'Attach</label><span id="reply-file-names" class="small muted"></span><button type="submit" class="btn btn-primary">' + icon('send', 14) + 'Send reply</button></div></div></form>' })) +
       '</div>' +
       '<div class="stack">' +
         View.panel({ title: 'Details', body: View.kv([
@@ -261,7 +260,7 @@
           footer: '<span id="kb-vote">' + (voted ? 'Thanks for your feedback.' : 'Was this article helpful? <button type="button" class="btn btn-secondary btn-xs" data-vote="yes">Yes</button> <button type="button" class="btn btn-secondary btn-xs" data-vote="no">No</button>') + '</span><a class="panel-link" href="' + App.url('support/tickets.html?new=1&subject=' + encodeURIComponent('Question about: ' + article.title)) + '">Still need help?</a>' }) +
         View.panel({ title: 'Related articles', flush: true, body: related.length ? related.map((a) => '<a class="kb-item" href="?article=' + a.id + '" data-article="' + a.id + '"><strong>' + esc(a.title) + '</strong><small>' + esc(a.category) + '</small></a>').join('') : View.empty({ title: 'No related articles' }) }) +
         '</div>';
-      document.title = article.title + ' | H&R Portal (Demo)';
+      document.title = article.title + ' | H&R Portal';
     }
 
     function route() {
@@ -319,7 +318,7 @@
           UI.fieldHTML({ name: 'cbPhone', label: 'Phone number', value: profile.phone, required: true }) +
           UI.fieldHTML({ name: 'window', label: 'Preferred time', type: 'select', options: ['As soon as possible', 'Today 12:00-14:00', 'Today 14:00-17:00', 'Tomorrow morning'] }) +
           '<button type="submit" class="btn btn-secondary">' + icon('phone', 14) + 'Request callback</button></form>' }) +
-        View.alert('info', '<strong>Account PIN:</strong> <span class="mono">4821</span> - quote this when calling so we can verify you. (Demo value)') +
+        View.alert('info', '<strong>Account PIN:</strong> <span class="mono">4821</span> - quote this when calling so we can verify you.') +
       '</div></div>';
 
     body.addEventListener('submit', async (e) => {
@@ -353,7 +352,7 @@
         await Util.delay(600);
         UI.setButtonLoading(button, false);
         App.log('Support', 'Callback requested', values.cbPhone + ' (' + values.window + ')');
-        UI.toast('Callback requested for ' + values.window.toLowerCase() + '. Demo action completed successfully; no call will be placed.');
+        UI.toast('Callback requested for ' + values.window.toLowerCase() + '.');
       }
     });
   });

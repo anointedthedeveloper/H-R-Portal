@@ -25,16 +25,15 @@
         '<aside class="auth-aside">' +
           '<div class="brand">' + '<span class="brand-mark" aria-hidden="true">' + icon('server', 18) + '</span><span class="brand-text"><strong>H&amp;R Portal</strong><small>Hosting &amp; Registrar</small></span></div>' +
           '<div><h2>Domains, hosting, email and billing in one console.</h2>' +
-          '<p class="mt-16">A client portal prototype. Every record you see is fictional and stored only in this browser. No registrar, hosting provider or payment gateway is contacted.</p></div>' +
-          '<div class="auth-status-list" aria-label="Environment details">' +
-            '<div><span>Environment</span><span>DEMO</span></div>' +
-            '<div><span>Data storage</span><span>browser localStorage</span></div>' +
-            '<div><span>External connections</span><span>none</span></div>' +
+          '<p class="mt-16">Manage registrations, DNS, hosting accounts, mailboxes and invoices from a single client account.</p></div>' +
+          '<div class="auth-status-list" aria-label="Platform details">' +
+            '<div><span>Data centres</span><span>London, Frankfurt, Amsterdam</span></div>' +
+            '<div><span>Support</span><span>24/7</span></div>' +
+            '<div><span>Platform status</span><span>operational</span></div>' +
             '<div><span>Portal build</span><span>2026.09</span></div>' +
           '</div>' +
         '</aside>' +
         '<main class="auth-main">' +
-          '<span class="env-tag env-tag-header auth-env">Demo Environment</span>' +
           '<div class="auth-card" id="auth-card"></div>' +
         '</main>' +
       '</div>';
@@ -62,7 +61,7 @@
           '<button type="button" class="link-btn" id="forgot-link">Forgot password?</button></div>' +
           '<button type="submit" class="btn btn-primary btn-lg btn-block" id="login-submit">Sign in</button>' +
         '</form>' +
-        '<p class="auth-foot">This is a demo environment. It is not a real registrar or hosting provider, and signing in does not contact any authentication service.</p>';
+        '<p class="auth-foot">Need help signing in? Use the password reset link or contact support.</p>';
 
       const form = card.querySelector('#login-form');
       const errorBox = card.querySelector('#login-error');
@@ -118,8 +117,7 @@
         '<form id="tfa-form" novalidate><div class="field"><label class="label" for="tfa-code">Authentication code</label>' +
         '<input id="tfa-code" class="input code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*"></div>' +
         '<button type="submit" class="btn btn-primary btn-lg btn-block">Verify</button>' +
-        '<button type="button" class="btn btn-ghost btn-block" id="tfa-back">Back to sign in</button></form>' +
-        View.demoNote('Demo: any six-digit code is accepted. No real one-time codes are generated or verified.');
+        '<button type="button" class="btn btn-ghost btn-block" id="tfa-back">Back to sign in</button></form>';
       const input = card.querySelector('#tfa-code');
       input.focus();
       card.querySelector('#tfa-back').addEventListener('click', () => showSignIn());
@@ -158,7 +156,7 @@
         UI.setButtonLoading(button, true, 'Sending...');
         await Util.delay(800);
         UI.setButtonLoading(button, false);
-        card.querySelector('#reset-result').innerHTML = View.alert('info', 'If an account exists for <strong>' + esc(values.email) + '</strong>, a reset link has been sent. Demo environment: no email was actually sent.');
+        card.querySelector('#reset-result').innerHTML = View.alert('info', 'If an account exists for <strong>' + esc(values.email) + '</strong>, a reset link has been sent.');
         form.querySelector('[type="submit"]').disabled = true;
       });
     }

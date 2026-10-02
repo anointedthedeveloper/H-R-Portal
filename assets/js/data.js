@@ -1,11 +1,11 @@
 /*
- * Centralised mock data for the demo environment.
+ * Centralised seed data for the portal.
  * Everything here is fictional. IP addresses use the RFC 5737 / RFC 3849
  * documentation ranges and no value connects to any real service.
  * The Store (app.js) copies these seeds into localStorage on first use.
  */
 window.MockData = {
-  version: 4,
+  version: 5,
   demoDate: '2026-09-30',
 
   profile: {
@@ -31,13 +31,13 @@ window.MockData = {
   },
 
   domains: [
-    { id: 'd1', name: 'exampleclient.com', status: 'Active', registered: '2019-12-18', expires: '2026-12-18', autoRenew: true, privacy: true, locked: true, hostingId: 'h1', registrar: 'Demo Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: true, renewalPrice: 13.99 },
-    { id: 'd2', name: 'exampleclient.ng', status: 'Active', registered: '2022-03-04', expires: '2027-03-04', autoRenew: true, privacy: false, locked: true, hostingId: 'h1', registrar: 'Demo Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: false, renewalPrice: 17.5 },
-    { id: 'd3', name: 'brightlane-studio.com', status: 'Active', registered: '2021-06-11', expires: '2027-06-11', autoRenew: false, privacy: true, locked: true, hostingId: 'h2', registrar: 'Demo Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: false, renewalPrice: 13.99 },
-    { id: 'd4', name: 'kestrel-labs.io', status: 'Expiring Soon', registered: '2023-10-22', expires: '2026-10-22', autoRenew: false, privacy: true, locked: true, hostingId: 'h3', registrar: 'Demo Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: true, renewalPrice: 49.0 },
-    { id: 'd5', name: 'orchardmarket.com.ng', status: 'Active', registered: '2024-01-15', expires: '2027-01-15', autoRenew: true, privacy: false, locked: false, hostingId: 'h4', registrar: 'Demo Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: false, renewalPrice: 9.5 },
-    { id: 'd6', name: 'summit-archive.org', status: 'Expired', registered: '2020-09-12', expires: '2026-09-12', autoRenew: false, privacy: true, locked: false, hostingId: null, registrar: 'Demo Registrar Services', nameservers: ['dns1.parked-demo.net', 'dns2.parked-demo.net'], customNameservers: true, dnssec: false, renewalPrice: 15.99 },
-    { id: 'd7', name: 'fieldnotes-journal.net', status: 'Pending Transfer', registered: '2018-04-30', expires: '2027-04-30', autoRenew: true, privacy: true, locked: false, hostingId: null, registrar: 'Previous Registrar (demo)', nameservers: ['ns1.fieldnotes-dns.net', 'ns2.fieldnotes-dns.net'], customNameservers: true, dnssec: false, renewalPrice: 14.99 }
+    { id: 'd1', name: 'exampleclient.com', status: 'Active', registered: '2019-12-18', expires: '2026-12-18', autoRenew: true, privacy: true, locked: true, hostingId: 'h1', registrar: 'H&R Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: true, renewalPrice: 13.99 },
+    { id: 'd2', name: 'exampleclient.ng', status: 'Active', registered: '2022-03-04', expires: '2027-03-04', autoRenew: true, privacy: false, locked: true, hostingId: 'h1', registrar: 'H&R Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: false, renewalPrice: 17.5 },
+    { id: 'd3', name: 'brightlane-studio.com', status: 'Active', registered: '2021-06-11', expires: '2027-06-11', autoRenew: false, privacy: true, locked: true, hostingId: 'h2', registrar: 'H&R Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: false, renewalPrice: 13.99 },
+    { id: 'd4', name: 'kestrel-labs.io', status: 'Expiring Soon', registered: '2023-10-22', expires: '2026-10-22', autoRenew: false, privacy: true, locked: true, hostingId: 'h3', registrar: 'H&R Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: true, renewalPrice: 49.0 },
+    { id: 'd5', name: 'orchardmarket.com.ng', status: 'Active', registered: '2024-01-15', expires: '2027-01-15', autoRenew: true, privacy: false, locked: false, hostingId: 'h4', registrar: 'H&R Registrar Services', nameservers: ['ns1.examplehost.com', 'ns2.examplehost.com'], customNameservers: false, dnssec: false, renewalPrice: 9.5 },
+    { id: 'd6', name: 'summit-archive.org', status: 'Expired', registered: '2020-09-12', expires: '2026-09-12', autoRenew: false, privacy: true, locked: false, hostingId: null, registrar: 'H&R Registrar Services', nameservers: ['dns1.parked-dns.net', 'dns2.parked-dns.net'], customNameservers: true, dnssec: false, renewalPrice: 15.99 },
+    { id: 'd7', name: 'fieldnotes-journal.net', status: 'Pending Transfer', registered: '2018-04-30', expires: '2027-04-30', autoRenew: true, privacy: true, locked: false, hostingId: null, registrar: 'Previous Registrar', nameservers: ['ns1.fieldnotes-dns.net', 'ns2.fieldnotes-dns.net'], customNameservers: true, dnssec: false, renewalPrice: 14.99 }
   ],
 
   childNameservers: [
@@ -46,8 +46,8 @@ window.MockData = {
   ],
 
   transfers: [
-    { id: 't1', domain: 'fieldnotes-journal.net', direction: 'Inbound', status: 'Awaiting Approval', started: '2026-09-26', eta: '2026-10-03', fromRegistrar: 'Previous Registrar (demo)' },
-    { id: 't2', domain: 'harbourline-demo.com', direction: 'Inbound', status: 'Completed', started: '2025-11-02', eta: '2025-11-08', fromRegistrar: 'Previous Registrar (demo)' }
+    { id: 't1', domain: 'fieldnotes-journal.net', direction: 'Inbound', status: 'Awaiting Approval', started: '2026-09-26', eta: '2026-10-03', fromRegistrar: 'Previous Registrar' },
+    { id: 't2', domain: 'harbourline-media.com', direction: 'Inbound', status: 'Completed', started: '2025-11-02', eta: '2025-11-08', fromRegistrar: 'Previous Registrar' }
   ],
 
   dnsRecords: [
@@ -108,13 +108,13 @@ window.MockData = {
   ],
 
   hostingAccounts: [
-    { id: 'h1', ref: 'HST-10421', planId: 'business', primaryDomain: 'exampleclient.com', server: 'web-lon-04', location: 'London, UK', ip: '203.0.113.24', username: 'exmplcli', status: 'Active', created: '2019-12-18', renewal: '2026-12-18', billingCycle: 'Annually', panel: 'Demo Panel 11.4',
+    { id: 'h1', ref: 'HST-10421', planId: 'business', primaryDomain: 'exampleclient.com', server: 'web-lon-04', location: 'London, UK', ip: '203.0.113.24', username: 'exmplcli', status: 'Active', created: '2019-12-18', renewal: '2026-12-18', billingCycle: 'Annually', panel: 'Control Panel 11.4',
       usage: { storageGB: 31.4, bandwidthGB: 212, websites: 4, databases: 6, emails: 6, cpu: 38, ramGB: 1.9, inodes: 188240, processes: 21 } },
-    { id: 'h2', ref: 'HST-10588', planId: 'professional', primaryDomain: 'brightlane-studio.com', server: 'web-fra-02', location: 'Frankfurt, DE', ip: '198.51.100.17', username: 'brightln', status: 'Active', created: '2021-06-11', renewal: '2026-10-11', billingCycle: 'Monthly', panel: 'Demo Panel 11.4',
+    { id: 'h2', ref: 'HST-10588', planId: 'professional', primaryDomain: 'brightlane-studio.com', server: 'web-fra-02', location: 'Frankfurt, DE', ip: '198.51.100.17', username: 'brightln', status: 'Active', created: '2021-06-11', renewal: '2026-10-11', billingCycle: 'Monthly', panel: 'Control Panel 11.4',
       usage: { storageGB: 64.2, bandwidthGB: 603, websites: 7, databases: 12, emails: 3, cpu: 52, ramGB: 4.6, inodes: 402118, processes: 37 } },
-    { id: 'h3', ref: 'HST-11032', planId: 'enterprise', primaryDomain: 'kestrel-labs.io', server: 'web-ams-01', location: 'Amsterdam, NL', ip: '192.0.2.40', username: 'kestrell', status: 'Active', created: '2023-10-22', renewal: '2026-10-22', billingCycle: 'Monthly', panel: 'Demo Panel 11.4',
+    { id: 'h3', ref: 'HST-11032', planId: 'enterprise', primaryDomain: 'kestrel-labs.io', server: 'web-ams-01', location: 'Amsterdam, NL', ip: '192.0.2.40', username: 'kestrell', status: 'Active', created: '2023-10-22', renewal: '2026-10-22', billingCycle: 'Monthly', panel: 'Control Panel 11.4',
       usage: { storageGB: 211.7, bandwidthGB: 2890, websites: 18, databases: 41, emails: 2, cpu: 81, ramGB: 12.3, inodes: 1492110, processes: 144 } },
-    { id: 'h4', ref: 'HST-11217', planId: 'starter', primaryDomain: 'orchardmarket.com.ng', server: 'web-lon-02', location: 'London, UK', ip: '203.0.113.61', username: 'orchardm', status: 'Suspended', created: '2024-01-15', renewal: '2026-09-15', billingCycle: 'Annually', panel: 'Demo Panel 11.4', suspendReason: 'Overdue invoice INV-2026-0418',
+    { id: 'h4', ref: 'HST-11217', planId: 'starter', primaryDomain: 'orchardmarket.com.ng', server: 'web-lon-02', location: 'London, UK', ip: '203.0.113.61', username: 'orchardm', status: 'Suspended', created: '2024-01-15', renewal: '2026-09-15', billingCycle: 'Annually', panel: 'Control Panel 11.4', suspendReason: 'Overdue invoice INV-2026-0418',
       usage: { storageGB: 6.1, bandwidthGB: 0, websites: 1, databases: 1, emails: 1, cpu: 0, ramGB: 0, inodes: 41020, processes: 0 } }
   ],
 
@@ -122,7 +122,7 @@ window.MockData = {
     { id: 's1', domain: 'exampleclient.com', altNames: 'www.exampleclient.com, mail.exampleclient.com', type: 'Domain Validated (DV)', issuer: 'Let\'s Encrypt R11', issued: '2026-08-20', expires: '2026-11-18', status: 'Active', autoRenew: true, hostingId: 'h1', key: 'RSA 2048' },
     { id: 's2', domain: 'exampleclient.ng', altNames: 'www.exampleclient.ng', type: 'Domain Validated (DV)', issuer: 'Let\'s Encrypt R10', issued: '2026-07-30', expires: '2026-10-28', status: 'Active', autoRenew: true, hostingId: 'h1', key: 'ECDSA P-256' },
     { id: 's3', domain: 'brightlane-studio.com', altNames: '*.brightlane-studio.com', type: 'Wildcard DV', issuer: 'Let\'s Encrypt R11', issued: '2026-09-02', expires: '2026-12-01', status: 'Active', autoRenew: true, hostingId: 'h2', key: 'RSA 2048' },
-    { id: 's4', domain: 'kestrel-labs.io', altNames: 'www.kestrel-labs.io, app.kestrel-labs.io', type: 'Organization Validated (OV)', issuer: 'Demo Trust CA OV G2', issued: '2026-02-03', expires: '2027-02-03', status: 'Active', autoRenew: false, hostingId: 'h3', key: 'RSA 3072' },
+    { id: 's4', domain: 'kestrel-labs.io', altNames: 'www.kestrel-labs.io, app.kestrel-labs.io', type: 'Organization Validated (OV)', issuer: 'Trust CA OV G2', issued: '2026-02-03', expires: '2027-02-03', status: 'Active', autoRenew: false, hostingId: 'h3', key: 'RSA 3072' },
     { id: 's5', domain: 'orchardmarket.com.ng', altNames: 'www.orchardmarket.com.ng', type: 'Domain Validated (DV)', issuer: 'Let\'s Encrypt R10', issued: '2026-06-10', expires: '2026-09-08', status: 'Expired', autoRenew: true, hostingId: 'h4', key: 'RSA 2048' },
     { id: 's6', domain: 'staging.kestrel-labs.io', altNames: '', type: 'Domain Validated (DV)', issuer: 'Let\'s Encrypt R11', issued: '2026-09-25', expires: '2026-12-24', status: 'Active', autoRenew: true, hostingId: 'h3', key: 'ECDSA P-256' }
   ],
@@ -196,7 +196,7 @@ window.MockData = {
         { name: '.htaccess', type: 'file', size: 1207, modified: '2026-07-14T08:51:00', perms: '0644', content: 'RewriteEngine On\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\n\n# BEGIN WordPress\nRewriteBase /\nRewriteRule ^index\\.php$ - [L]\nRewriteCond %{REQUEST_FILENAME} !-f\nRewriteCond %{REQUEST_FILENAME} !-d\nRewriteRule . /index.php [L]\n# END WordPress\n' },
         { name: 'robots.txt', type: 'file', size: 112, modified: '2026-03-02T10:00:00', perms: '0644', content: 'User-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n\nSitemap: https://exampleclient.com/sitemap.xml\n' },
         { name: 'sitemap.xml', type: 'file', size: 6480, modified: '2026-09-01T04:00:00', perms: '0644', content: '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://exampleclient.com/</loc></url>\n  <url><loc>https://exampleclient.com/services/</loc></url>\n  <url><loc>https://exampleclient.com/contact/</loc></url>\n</urlset>\n' },
-        { name: 'wp-config.php', type: 'file', size: 3354, modified: '2026-05-19T13:27:00', perms: '0600', content: '<?php\n// Demo file. Credentials below are placeholders.\ndefine( \'DB_NAME\', \'exmplcli_wp\' );\ndefine( \'DB_USER\', \'exmplcli_wpuser\' );\ndefine( \'DB_PASSWORD\', \'********\' );\ndefine( \'DB_HOST\', \'localhost\' );\n$table_prefix = \'wp_\';\n' },
+        { name: 'wp-config.php', type: 'file', size: 3354, modified: '2026-05-19T13:27:00', perms: '0600', content: '<?php\ndefine( \'DB_NAME\', \'exmplcli_wp\' );\ndefine( \'DB_USER\', \'exmplcli_wpuser\' );\ndefine( \'DB_PASSWORD\', \'********\' );\ndefine( \'DB_HOST\', \'localhost\' );\n$table_prefix = \'wp_\';\n' },
         { name: 'favicon.ico', type: 'file', size: 15086, modified: '2025-11-03T09:00:00', perms: '0644' }
       ] },
       { name: 'backups', type: 'dir', modified: '2026-09-30T02:00:00', perms: '0700', children: [
@@ -237,17 +237,17 @@ window.MockData = {
   catchAll: { 'exampleclient.com': 'reject', 'brightlane-studio.com': 'hello@brightlane-studio.com', 'kestrel-labs.io': 'reject', 'orchardmarket.com.ng': 'reject', 'exampleclient.ng': 'reject' },
 
   messages: [
-    { id: 'msg1', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Billing Department (Demo)', from: 'billing@portal.invalid', to: 'admin@exampleclient.com', subject: 'Invoice INV-2026-0452 generated', date: '2026-09-30T08:02:00', read: false, starred: true, body: 'Hello Jordan,\n\nInvoice INV-2026-0452 for $64.99 has been generated for the renewal of kestrel-labs.io and Enterprise Hosting (HST-11032).\n\nDue date: 15 Oct 2026\n\nYou can view and pay this invoice from the Billing section of the client portal.\n\nRegards,\nBilling Department' },
+    { id: 'msg1', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Billing Department', from: 'billing@portal.invalid', to: 'admin@exampleclient.com', subject: 'Invoice INV-2026-0452 generated', date: '2026-09-30T08:02:00', read: false, starred: true, body: 'Hello Jordan,\n\nInvoice INV-2026-0452 for $64.99 has been generated for the renewal of kestrel-labs.io and Enterprise Hosting (HST-11032).\n\nDue date: 15 Oct 2026\n\nYou can view and pay this invoice from the Billing section of the client portal.\n\nRegards,\nBilling Department' },
     { id: 'msg2', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Backup Service', from: 'backups@portal.invalid', to: 'admin@exampleclient.com', subject: 'Backup completed: HST-10421 (8.42 GB)', date: '2026-09-30T02:19:00', read: false, starred: false, body: 'The scheduled full backup of HST-10421 completed successfully.\n\nSize: 8.42 GB\nDuration: 18 minutes\nRetention: 14 days\n\nNo action is required.' },
     { id: 'msg3', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Priya Raman', from: 'priya@exampleclient.com', to: 'admin@exampleclient.com', subject: 'Re: Staging site DNS', date: '2026-09-29T16:48:00', read: true, starred: false, body: 'Hi Jordan,\n\nI have added the staging CNAME. It should resolve within the hour. Can you check that the SSL certificate picks it up on the next renewal?\n\nThanks,\nPriya' },
     { id: 'msg4', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'SSL Monitor', from: 'ssl@portal.invalid', to: 'admin@exampleclient.com', subject: 'SSL certificate for orchardmarket.com.ng has expired', date: '2026-09-08T00:05:00', read: true, starred: false, body: 'The certificate for orchardmarket.com.ng expired on 08 Sep 2026 and could not be renewed automatically because the hosting account HST-11217 is suspended.\n\nSettle invoice INV-2026-0418 to restore the account. Renewal will run automatically afterwards.' },
-    { id: 'msg5', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Website Contact Form', from: 'noreply@exampleclient.com', to: 'admin@exampleclient.com', subject: 'New enquiry: Quote request for annual maintenance', date: '2026-09-28T13:22:00', read: true, starred: false, body: 'Name: Sam Whitfield\nCompany: Whitfield Logistics (fictional)\n\nMessage:\nWe would like a quote for annual website maintenance, including monthly reporting.' },
+    { id: 'msg5', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Website Contact Form', from: 'noreply@exampleclient.com', to: 'admin@exampleclient.com', subject: 'New enquiry: Quote request for annual maintenance', date: '2026-09-28T13:22:00', read: true, starred: false, body: 'Name: Sam Whitfield\nCompany: Whitfield Logistics \n\nMessage:\nWe would like a quote for annual website maintenance, including monthly reporting.' },
     { id: 'msg6', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Domain Services', from: 'domains@portal.invalid', to: 'admin@exampleclient.com', subject: 'kestrel-labs.io expires in 22 days', date: '2026-09-30T06:00:00', read: false, starred: false, body: 'The domain kestrel-labs.io expires on 22 Oct 2026. Auto-renewal is disabled for this domain.\n\nRenew it from the Domains section to avoid service interruption.' },
     { id: 'msg7', mailbox: 'admin@exampleclient.com', folder: 'Sent', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'priya@exampleclient.com', subject: 'Staging site DNS', date: '2026-09-29T15:10:00', read: true, starred: false, body: 'Hi Priya,\n\nCould you add a CNAME for staging pointing at the main site? We need it for the review on Thursday.\n\nJordan' },
     { id: 'msg8', mailbox: 'admin@exampleclient.com', folder: 'Sent', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'tomasz@exampleclient.com', subject: 'Cron failure on rotate-logs.sh', date: '2026-09-27T09:02:00', read: true, starred: false, body: 'Tomasz, the weekly log rotation job exited with status 1 on Sunday. Can you take a look?' },
     { id: 'msg9', mailbox: 'admin@exampleclient.com', folder: 'Drafts', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'amara@exampleclient.com', subject: 'Q4 hosting budget', date: '2026-09-26T18:30:00', read: true, starred: false, body: 'Amara,\n\nDraft figures for Q4 hosting spend:\n- Enterprise Hosting: $47.97\n- Professional Hosting: $23.97\n' },
-    { id: 'msg10', mailbox: 'admin@exampleclient.com', folder: 'Spam', fromName: 'Prize Desk', from: 'winner@spam.invalid', to: 'admin@exampleclient.com', subject: 'You have been selected', date: '2026-09-25T04:11:00', read: false, starred: false, body: 'This message was classified as spam by the demo filter.' },
-    { id: 'msg11', mailbox: 'admin@exampleclient.com', folder: 'Trash', fromName: 'Newsletter', from: 'news@newsletter.invalid', to: 'admin@exampleclient.com', subject: 'September product digest', date: '2026-09-15T10:00:00', read: true, starred: false, body: 'Monthly digest (demo content).' }
+    { id: 'msg10', mailbox: 'admin@exampleclient.com', folder: 'Spam', fromName: 'Prize Desk', from: 'winner@spam.invalid', to: 'admin@exampleclient.com', subject: 'You have been selected', date: '2026-09-25T04:11:00', read: false, starred: false, body: 'This message was classified as spam.' },
+    { id: 'msg11', mailbox: 'admin@exampleclient.com', folder: 'Trash', fromName: 'Newsletter', from: 'news@newsletter.invalid', to: 'admin@exampleclient.com', subject: 'September product digest', date: '2026-09-15T10:00:00', read: true, starred: false, body: 'Monthly product digest.' }
   ],
 
   subscriptions: [
@@ -281,7 +281,7 @@ window.MockData = {
   transactions: [
     { id: 'TXN-884120', date: '2026-09-21T10:14:00', description: 'Payment for INV-2026-0440', type: 'Payment', method: 'Visa ending 4242', amount: 15.99, status: 'Completed', invoiceId: 'INV-2026-0440' },
     { id: 'TXN-883702', date: '2026-09-11T08:02:00', description: 'Payment for INV-2026-0436', type: 'Payment', method: 'Visa ending 4242', amount: 7.99, status: 'Completed', invoiceId: 'INV-2026-0436' },
-    { id: 'TXN-883655', date: '2026-09-02T02:10:00', description: 'Automatic charge for INV-2026-0418', type: 'Payment', method: 'Mastercard ending 5100', amount: 35.88, status: 'Failed', invoiceId: 'INV-2026-0418', note: 'Card declined by issuer (demo)' },
+    { id: 'TXN-883655', date: '2026-09-02T02:10:00', description: 'Automatic charge for INV-2026-0418', type: 'Payment', method: 'Mastercard ending 5100', amount: 35.88, status: 'Failed', invoiceId: 'INV-2026-0418', note: 'Card declined by issuer ' },
     { id: 'TXN-882903', date: '2026-08-22T09:41:00', description: 'Payment for INV-2026-0428', type: 'Payment', method: 'Visa ending 4242', amount: 15.99, status: 'Completed', invoiceId: 'INV-2026-0428' },
     { id: 'TXN-882410', date: '2026-08-10T17:20:00', description: 'Payment for INV-2026-0421', type: 'Payment', method: 'Mastercard ending 5100', amount: 7.99, status: 'Completed', invoiceId: 'INV-2026-0421' },
     { id: 'TXN-881877', date: '2026-07-22T07:55:00', description: 'Payment for INV-2026-0409', type: 'Payment', method: 'Visa ending 4242', amount: 15.99, status: 'Completed', invoiceId: 'INV-2026-0409' },
@@ -371,9 +371,9 @@ window.MockData = {
   ],
 
   apiKeys: [
-    { id: 'k1', name: 'CI deployment', prefix: 'demo_4f1a', created: '2025-04-11', lastUsed: '2026-09-30T07:41:00', scopes: ['dns:write', 'hosting:read'], status: 'Active' },
-    { id: 'k2', name: 'Monitoring dashboard', prefix: 'demo_9c2e', created: '2024-11-02', lastUsed: '2026-09-30T09:55:00', scopes: ['hosting:read', 'domains:read'], status: 'Active' },
-    { id: 'k3', name: 'Old accounting export', prefix: 'demo_12bd', created: '2023-06-19', lastUsed: '2025-01-08T14:12:00', scopes: ['billing:read'], status: 'Revoked' }
+    { id: 'k1', name: 'CI deployment', prefix: 'hrp_4f1a', created: '2025-04-11', lastUsed: '2026-09-30T07:41:00', scopes: ['dns:write', 'hosting:read'], status: 'Active' },
+    { id: 'k2', name: 'Monitoring dashboard', prefix: 'hrp_9c2e', created: '2024-11-02', lastUsed: '2026-09-30T09:55:00', scopes: ['hosting:read', 'domains:read'], status: 'Active' },
+    { id: 'k3', name: 'Old accounting export', prefix: 'hrp_12bd', created: '2023-06-19', lastUsed: '2025-01-08T14:12:00', scopes: ['billing:read'], status: 'Revoked' }
   ],
 
   apiSettings: { ipRestriction: '198.51.100.0/24', rateLimit: '600 requests / minute' },

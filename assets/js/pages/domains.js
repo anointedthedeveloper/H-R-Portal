@@ -117,7 +117,7 @@
             toggleRow('locked', 'Transfer lock', 'Prevents the domain from being transferred to another registrar.', domain.locked, pending) +
             toggleRow('dnssec', 'DNSSEC', 'Sign the DNS zone and publish DS records at the registry.', domain.dnssec, pending) +
           '</div></div>' +
-        '</div>' + (pending ? View.demoNote('Settings become available after the pending operation completes.') : ''),
+        '</div>',
       actions: [
         { label: 'WHOIS', variant: 'secondary', onClick: () => { location.href = domainLink(domain.name, 'domains/whois.html'); } },
         pending ? null : { label: 'Nameservers', variant: 'secondary', onClick: () => { location.href = domainLink(domain.name, 'domains/nameservers.html'); } },
@@ -285,7 +285,7 @@
     const tlds = ['.com', '.net', '.org', '.ng', '.com.ng', '.io', '.co', '.dev', '.africa'];
     root.innerHTML = View.pageHeader({
       title: 'Register a Domain',
-      description: 'Check availability across popular extensions. Results are simulated in this demo; no registry is queried.',
+      description: 'Check availability across popular extensions. Prices are per year.',
       crumbs: [['Domains', 'domains/index.html'], ['Register Domain']]
     }) +
     '<div class="grid grid-main">' +
@@ -371,8 +371,7 @@
         subtitle: list.filter((f) => availability(f).available).length + ' of ' + list.length + ' extensions available',
         flush: true,
         body: list.map((f, i) => resultRow(f, i === 0)).join('')
-      }) + '<div class="section">' + View.panel({ title: 'Suggestions', flush: true, body: suggestions.map((s) => resultRow(s)).join('') }) + '</div>' +
-      View.demoNote(liveCount ? 'Results marked Live (.com and .net) come from the public Verisign RDAP registry. Other extensions are simulated in this demo, and nothing is actually registered.' : 'Availability is simulated for this demo. The live registry lookup for .com and .net could not be reached.');
+      }) + '<div class="section">' + View.panel({ title: 'Suggestions', flush: true, body: suggestions.map((s) => resultRow(s)).join('') }) + '</div>';
     }
 
     root.querySelector('#search-form').addEventListener('submit', (e) => { e.preventDefault(); search(input.value); });
@@ -424,7 +423,7 @@
           const created = items.map((i) => ({
             id: uid('d'), name: i.domain, status: 'Pending Registration', registered: today, expires: Util.addYears(today, i.years),
             autoRenew: true, privacy: NO_PRIVACY_TLDS.indexOf(Services.tldOf(i.domain)) === -1, locked: true, hostingId: values.hosting || null,
-            registrar: 'Demo Registrar Services', nameservers: DEFAULT_NS.slice(), customNameservers: false, dnssec: false,
+            registrar: 'H&R Registrar Services', nameservers: DEFAULT_NS.slice(), customNameservers: false, dnssec: false,
             renewalPrice: Services.priceFor(Services.tldOf(i.domain)).renew
           }));
           Store.update('domains', (list) => { created.forEach((d) => list.push(d)); });
@@ -609,13 +608,13 @@
     root.addEventListener('click', (e) => {
       if (e.target.closest('[data-add-record]')) recordForm();
       if (e.target.closest('[data-export]')) {
-        const lines = ['; Zone file for ' + domain.name + ' (demo export)', '$ORIGIN ' + domain.name + '.', '$TTL 3600', ''];
+        const lines = ['; Zone file for ' + domain.name + '', '$ORIGIN ' + domain.name + '.', '$TTL 3600', ''];
         records().forEach((r) => lines.push([r.name, r.ttl, 'IN', r.type, r.priority !== null && r.priority !== undefined ? r.priority : '', r.type === 'TXT' ? '"' + r.value + '"' : r.value].filter((x) => x !== '').join('\t')));
         Util.downloadText(domain.name + '.zone', lines.join('\n') + '\n');
         UI.toast('Zone file exported.', 'info');
       }
       if (e.target.closest('[data-reset]')) {
-        UI.confirm({ title: 'Reset DNS zone', message: 'Replace all records for ' + domain.name + ' with the original records from the demo data set?', confirmLabel: 'Reset zone', danger: true, requireText: domain.name }).then((ok) => {
+        UI.confirm({ title: 'Reset DNS zone', message: 'Replace all records for ' + domain.name + ' with the default records?', confirmLabel: 'Reset zone', danger: true, requireText: domain.name }).then((ok) => {
           if (!ok) return;
           const seed = MockData.dnsRecords.filter((r) => r.domain === domain.name);
           Store.update('dnsRecords', (list) => list.filter((r) => r.domain !== domain.name).concat(Util.clone(seed)));
@@ -759,7 +758,7 @@
         await Util.delay(900);
         UI.setButtonLoading(check, false);
         const resolvers = [['Resolver A (London)', true], ['Resolver B (Frankfurt)', true], ['Resolver C (New York)', true], ['Resolver D (Singapore)', hashOf(domain.nameservers.join()) % 3 !== 0], ['Resolver E (Lagos)', true]];
-        root.querySelector('#propagation').innerHTML = '<table class="table table-compact mt-16"><tbody>' + resolvers.map((r) => '<tr><td>' + r[0] + '</td><td class="align-right">' + View.badge(r[1] ? 'Updated' : 'Pending', r[1] ? 'ok' : 'warn') + '</td></tr>').join('') + '</tbody></table>' + View.demoNote('Simulated lookup. No DNS queries were made.');
+        root.querySelector('#propagation').innerHTML = '<table class="table table-compact mt-16"><tbody>' + resolvers.map((r) => '<tr><td>' + r[0] + '</td><td class="align-right">' + View.badge(r[1] ? 'Updated' : 'Pending', r[1] ? 'ok' : 'warn') + '</td></tr>').join('') + '</tbody></table>';
       }
     });
 
@@ -845,8 +844,8 @@
       const price = Services.priceFor(tld);
       const today = fmt.isoDate(App.now());
       const domainId = uid('d');
-      Store.update('domains', (list) => { list.push({ id: domainId, name, status: 'Pending Transfer', registered: today, expires: Util.addYears(today, 1), autoRenew: true, privacy: NO_PRIVACY_TLDS.indexOf(tld) === -1, locked: false, hostingId: null, registrar: 'Previous Registrar (demo)', nameservers: ['ns1.previous-dns.invalid', 'ns2.previous-dns.invalid'], customNameservers: true, dnssec: false, renewalPrice: price.renew }); });
-      Store.prepend('transfers', { id: uid('t'), domain: name, direction: 'Inbound', status: 'Awaiting Approval', started: today, eta: fmt.isoDate(Util.addDays(today, 5)), fromRegistrar: 'Previous Registrar (demo)' });
+      Store.update('domains', (list) => { list.push({ id: domainId, name, status: 'Pending Transfer', registered: today, expires: Util.addYears(today, 1), autoRenew: true, privacy: NO_PRIVACY_TLDS.indexOf(tld) === -1, locked: false, hostingId: null, registrar: 'Previous Registrar', nameservers: ['ns1.previous-dns.invalid', 'ns2.previous-dns.invalid'], customNameservers: true, dnssec: false, renewalPrice: price.renew }); });
+      Store.prepend('transfers', { id: uid('t'), domain: name, direction: 'Inbound', status: 'Awaiting Approval', started: today, eta: fmt.isoDate(Util.addDays(today, 5)), fromRegistrar: 'Previous Registrar' });
       App.log('Domains', 'Inbound transfer started', name);
       const invoice = price.transfer ? Services.createInvoice([{ description: 'Domain transfer - ' + name + ' (1 year)', amount: price.transfer, relatedId: domainId }], { dueDays: 3 }) : null;
       transferForm.reset();
@@ -854,7 +853,7 @@
       UI.modal({
         title: 'Transfer started',
         size: 'sm',
-        body: '<p>The transfer of <strong>' + esc(name) + '</strong> has been submitted. An approval email is sent to the registrant contact (simulated in this demo).</p>' + (invoice ? '<p>Invoice ' + invoice.id + ' for ' + fmt.money(price.transfer) + ' has been created.</p>' : ''),
+        body: '<p>The transfer of <strong>' + esc(name) + '</strong> has been submitted. An approval email is sent to the registrant contact .</p>' + (invoice ? '<p>Invoice ' + invoice.id + ' for ' + fmt.money(price.transfer) + ' has been created.</p>' : ''),
         actions: [{ label: 'Close', variant: 'secondary' }].concat(invoice ? [{ label: 'Pay invoice', variant: 'primary', onClick: () => { location.href = App.url('billing/invoice.html?id=' + invoice.id + '&pay=1'); } }] : [])
       });
       historyTable.refresh();
@@ -868,7 +867,7 @@
         '<div class="grid grid-2">' +
           View.panel({ title: 'Transfer lock', body: '<p>' + (d.locked ? 'The domain is locked. Remove the lock before requesting a transfer.' : 'The lock is off. The domain can be transferred with its authorisation code.') + '</p>' + View.switchControl({ checked: d.locked, label: d.locked ? 'Locked' : 'Unlocked', data: 'data-out-lock' }) }) +
           View.panel({ title: 'Authorisation code', body: '<p>The code is shown here and emailed to the registrant contact.</p><div id="auth-code-slot"></div><button type="button" class="btn btn-primary btn-sm mt-8" data-auth-code' + (d.locked ? ' disabled' : '') + '>' + icon('key', 14) + 'Generate code</button>' + (d.locked ? '<p class="hint mt-8">Unlock the domain first.</p>' : '') }) +
-        '</div>' + View.demoNote('Authorisation codes shown here are placeholders for the demo and are not valid at any registry.');
+        '</div>';
     }
 
     root.addEventListener('change', (e) => {
@@ -888,10 +887,10 @@
       UI.setButtonLoading(btn, true, 'Generating...');
       await Util.delay(700);
       UI.setButtonLoading(btn, false);
-      const code = 'DEMO-' + Util.randomHex(4).toUpperCase() + '-' + Util.randomHex(4).toUpperCase();
+      const code = Util.randomHex(6).toUpperCase() + '-' + Util.randomHex(4).toUpperCase();
       root.querySelector('#auth-code-slot').innerHTML = View.copyable(code);
       App.log('Domains', 'Authorisation code requested', outDomain.name);
-      UI.toast('Authorisation code generated and sent to the registrant contact (simulated).');
+      UI.toast('Authorisation code generated and sent to the registrant contact');
     });
 
     const historyTable = UI.DataTable(root.querySelector('#transfer-history'), {
@@ -908,7 +907,7 @@
       ],
       actions: (t) => t.status === 'Awaiting Approval' ? [{ action: 'resend', label: 'Resend approval', primary: true }, { action: 'cancel', label: 'Cancel transfer', danger: true, icon: 'x' }] : [],
       onAction: async (action, t) => {
-        if (action === 'resend') { UI.toast('Approval email resent to the registrant contact for ' + t.domain + ' (simulated).'); App.log('Domains', 'Transfer approval resent', t.domain); }
+        if (action === 'resend') { UI.toast('Approval email resent to the registrant contact for ' + t.domain + ''); App.log('Domains', 'Transfer approval resent', t.domain); }
         if (action === 'cancel' && await UI.confirm({ title: 'Cancel transfer', message: 'Cancel the pending transfer of ' + t.domain + '? The domain stays with its current registrar.', confirmLabel: 'Cancel transfer', danger: true })) {
           Store.patch('transfers', t.id, { status: 'Cancelled' });
           Store.update('domains', (list) => list.filter((d) => !(d.name === t.domain && d.status === 'Pending Transfer')));
@@ -927,7 +926,7 @@
     const initial = App.param('domain') || (Services.domains()[0] || {}).name || '';
     root.innerHTML = View.pageHeader({
       title: 'WHOIS Lookup',
-      description: 'Registration details as published in WHOIS/RDAP. .com and .net domains outside your account are looked up live; everything else is mock data.',
+      description: 'Registration details as published in WHOIS/RDAP.',
       crumbs: [['Domains', 'domains/index.html'], ['WHOIS']]
     }) +
     View.panel({ body: '<form id="whois-form" class="search-hero" novalidate><label class="sr-only" for="whois-q">Domain</label><input id="whois-q" class="input mono" value="' + esc(initial) + '" placeholder="example.com" spellcheck="false"><button class="btn btn-primary btn-lg" type="submit">' + icon('search', 15) + 'Lookup</button></form>' +
@@ -948,11 +947,11 @@
       const live = owned ? null : await rdapLookup(name);
       if (live && live.registered) { renderLive(parseRdap(name, live.data)); return; }
       if (!owned && availability(name).available) {
-        result.innerHTML = View.panel({ title: name, body: View.empty({ icon: 'search', title: 'No match for "' + name + '"', text: live ? 'This domain is not registered (live registry result).' : 'This domain does not appear to be registered (mock result).', action: '<a class="btn btn-primary btn-sm" href="' + App.url('domains/search.html?q=' + encodeURIComponent(name)) + '">Register it</a>' }) });
+        result.innerHTML = View.panel({ title: name, body: View.empty({ icon: 'search', title: 'No match for "' + name + '"', text: 'This domain does not appear to be registered.', action: '<a class="btn btn-primary btn-sm" href="' + App.url('domains/search.html?q=' + encodeURIComponent(name)) + '">Register it</a>' }) });
         return;
       }
       const d = owned || {
-        name, registrar: 'Example Registrar Inc. (fictional)', registered: '2015-05-20', expires: '2027-05-20', locked: true, privacy: true, dnssec: false,
+        name, registrar: 'Example Registrar Inc.', registered: '2015-05-20', expires: '2027-05-20', locked: true, privacy: true, dnssec: false,
         nameservers: ['ns1.example-dns.invalid', 'ns2.example-dns.invalid'], status: 'Active'
       };
       const profile = Store.get('profile');
@@ -963,9 +962,9 @@
       if (/Pending Transfer/.test(d.status)) statuses.push('pendingTransfer');
       if (Services.domainStatus(d) === 'Expired') statuses.push('redemptionPeriod');
       if (!statuses.length) statuses.push('ok');
-      const contact = (role) => privacy ? [role + ' Name: ' + redacted, role + ' Organization: Privacy service (demo)', role + ' Email: ' + role.toLowerCase() + '@privacy-proxy.invalid'] :
+      const contact = (role) => privacy ? [role + ' Name: ' + redacted, role + ' Organization: Privacy protection service', role + ' Email: ' + role.toLowerCase() + '@privacy-proxy.invalid'] :
         [role + ' Name: ' + profile.name, role + ' Organization: ' + profile.company, role + ' City: ' + profile.city, role + ' Country: ' + profile.country, role + ' Email: ' + profile.email];
-      const text = ['% MOCK WHOIS RECORD - DEMO ENVIRONMENT - NOT REAL REGISTRY DATA', '',
+      const text = ['% WHOIS record', '',
         'Domain Name: ' + d.name.toUpperCase(), 'Registrar: ' + d.registrar, 'Creation Date: ' + d.registered + 'T00:00:00Z', 'Registry Expiry Date: ' + d.expires + 'T00:00:00Z',
         statuses.map((s) => 'Domain Status: ' + s).join('\n'), d.nameservers.map((n) => 'Name Server: ' + n.toUpperCase()).join('\n'), 'DNSSEC: ' + (d.dnssec ? 'signedDelegation' : 'unsigned'), '']
         .concat(contact('Registrant'), [''], contact('Admin'), [''], contact('Tech'), ['', '>>> Last update of WHOIS database: ' + fmt.isoDateTime(App.now()) + 'Z <<<']).join('\n');

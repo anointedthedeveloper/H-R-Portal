@@ -135,7 +135,9 @@ Compared with the structure in the brief, I added three pages and two scripts:
 
 The demo uses a fixed "today" of **30 Sep 2026** combined with your real time of day. That keeps relative dates such as "expires in 22 days" consistent with the seeded data whenever you open it.
 
-To start over, go to **Settings > Reset demo data**. Bumping `MockData.version` also clears stored data.
+The interface itself shows no "demo" labels or notices, so keep in mind that every action described below as simulated looks real to visitors.
+
+To start over, go to **Settings > Reset data**. Bumping `MockData.version` also clears stored data.
 
 ## Known limitations (no backend)
 

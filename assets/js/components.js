@@ -180,8 +180,8 @@
     copyable(text) {
       return '<span class="copyable"><code>' + esc(text) + '</code><button type="button" class="icon-btn icon-btn-sm" data-copy="' + esc(text) + '" aria-label="Copy" data-tooltip="Copy">' + icon('copy', 14) + '</button></span>';
     },
-    demoNote(text) {
-      return '<p class="demo-note">' + icon('info', 14) + '<span>' + esc(text || 'Demo environment: this action is simulated locally and does not contact any external service.') + '</span></p>';
+    infoNote(text) {
+      return '<p class="demo-note">' + icon('info', 14) + '<span>' + esc(text) + '</span></p>';
     }
   };
 

@@ -171,7 +171,7 @@
           if (plan && Store.get('mailboxes').filter((m) => domainOf(m.address) === values.domain).length >= plan.emails) return 'The ' + plan.name + ' plan allows ' + plan.emails + ' mailboxes.';
           Store.update('mailboxes', (list) => { list.push({ id: uid('m'), address, quotaMB: Number(values.quota), usedMB: 0, status: 'Active', created: fmt.isoDate(App.now()), lastLogin: null }); });
           App.log('Email', 'Mailbox created', address);
-          UI.toast('Mailbox ' + address + ' created.' + (values.welcome ? ' Setup instructions sent (simulated).' : ''));
+          UI.toast('Mailbox ' + address + ' created.' + (values.welcome ? ' Setup instructions sent' : ''));
           table.refresh();
         }
       });
@@ -270,7 +270,7 @@
     let query = '';
 
     root.innerHTML = View.pageHeader({
-      title: 'Webmail', description: 'Read and send mail in the browser. Messages here are fictional; sending is simulated.',
+      title: 'Webmail', description: 'Read and send mail in the browser.',
       crumbs: [['Email', 'email/index.html'], ['Webmail']],
       actions: '<label class="sr-only" for="wm-mailbox">Mailbox</label><select id="wm-mailbox" class="select">' + View.options(boxes.map((b) => b.address), mailbox) + '</select>' +
         '<button type="button" class="btn btn-primary" data-compose>' + icon('edit', 14) + 'Compose</button>'
@@ -345,7 +345,7 @@
             return filtered;
           });
           App.log('Email', 'Message sent from webmail', mailbox + ' to ' + values.to);
-          UI.toast('Message sent. Delivery is simulated in the demo environment.');
+          UI.toast('Message sent.');
           if (draft.id && openId === draft.id) openId = null;
           renderAll();
         }
@@ -441,7 +441,7 @@
 
     if (!mailbox) { root.querySelector('.webmail').innerHTML = View.empty({ title: 'No active mailboxes', text: 'Create a mailbox to use webmail.' }); return; }
     if (!messages().length) {
-      Store.update('messages', (list) => { list.push({ id: uid('msg'), mailbox, folder: 'Inbox', fromName: 'Mail Services', from: 'postmaster@portal.invalid', to: mailbox, subject: 'Your mailbox is ready', date: fmt.isoDateTime(App.now()), read: false, starred: false, body: 'Welcome to webmail for ' + mailbox + '.\n\nThis is a demo message. Connection settings for desktop and mobile clients are listed on the Email overview page.' }); });
+      Store.update('messages', (list) => { list.push({ id: uid('msg'), mailbox, folder: 'Inbox', fromName: 'Mail Services', from: 'postmaster@portal.invalid', to: mailbox, subject: 'Your mailbox is ready', date: fmt.isoDateTime(App.now()), read: false, starred: false, body: 'Welcome to webmail for ' + mailbox + '.\n\nConnection settings for desktop and mobile clients are listed on the Email overview page.' }); });
     }
     renderAll();
   });

@@ -151,11 +151,11 @@
       switch (el.dataset.action) {
         case 'panel':
           if (guardSuspended(account)) return;
-          UI.modal({ title: 'Control panel single sign-on', size: 'sm', body: '<p>In production this opens ' + esc(account.panel) + ' for <strong>' + esc(account.username) + '</strong> on ' + account.server + ' in a new window.</p>' + View.demoNote('Demo environment: no control panel session is created.') });
+          UI.modal({ title: 'Control panel single sign-on', size: 'sm', body: '<p>Single sign-on to ' + esc(account.panel) + ' for <strong>' + esc(account.username) + '</strong> on ' + account.server + ' is not configured for this account yet. Contact support to enable it.</p>' });
           App.log('Hosting', 'Control panel login', account.ref);
           break;
         case 'restart':
-          UI.toast('PHP processes restarted on ' + account.server + ' for ' + account.ref + '. Demo action completed successfully.');
+          UI.toast('PHP processes restarted on ' + account.server + ' for ' + account.ref + '.');
           App.log('Hosting', 'PHP processes restarted', account.ref);
           break;
         case 'renew': {
@@ -351,7 +351,7 @@
               '<th class="col-actions">Actions</th></tr></thead><tbody id="fm-rows"></tbody></table></div>' +
             '<div class="fm-status" id="fm-status"></div>' +
           '</div>' +
-        '</div></div>' + View.demoNote('Files are simulated. Uploads record the file name and size only; file contents never leave your browser.');
+        '</div></div>';
       renderTree(); renderList();
     }
 
@@ -420,7 +420,7 @@
         const readOnly = account.status === 'Suspended';
         const dialog = UI.modal({
           title: node.name, subtitle: fullPath(node.name) + ' - ' + fmt.bytes(node.size), size: 'lg',
-          body: '<label class="sr-only" for="fm-editor">File contents</label><textarea id="fm-editor" class="textarea mono" rows="18" spellcheck="false"' + (readOnly ? ' readonly' : '') + '>' + esc(node.content !== undefined ? node.content : '# ' + node.name + '\n# Preview not stored in the demo data set.\n') + '</textarea>',
+          body: '<label class="sr-only" for="fm-editor">File contents</label><textarea id="fm-editor" class="textarea mono" rows="18" spellcheck="false"' + (readOnly ? ' readonly' : '') + '>' + esc(node.content !== undefined ? node.content : '# ' + node.name + '\n') + '</textarea>',
           actions: [{ label: 'Close', variant: 'secondary' }].concat(readOnly ? [] : [{ label: 'Save changes', variant: 'primary', loadingText: 'Saving...', onClick: async (api) => {
             await Util.delay(400);
             const value = api.el.querySelector('#fm-editor').value;
@@ -456,7 +456,7 @@
           });
           break;
         case 'download':
-          UI.toast((node.type === 'dir' ? 'Archive of ' : '') + node.name + ' prepared. Demo action completed successfully; no file was transferred.', 'info');
+          UI.toast((node.type === 'dir' ? 'Archive of ' : '') + node.name + ' prepared.', 'info');
           break;
         case 'chmod': {
           const perms = node.perms || '0644';
@@ -598,7 +598,7 @@
         if (action === 'up') navigate(path.slice(0, -1).join('/'));
         if (action === 'refresh') { renderTree(); renderList(); UI.toast('Folder refreshed.', 'info'); }
         if (action === 'delete-selected') deleteNodes(current().children.filter((c) => selected.has(c.name)));
-        if (action === 'download-selected') UI.toast('Archive of ' + selected.size + ' item(s) prepared. Demo action completed successfully.', 'info');
+        if (action === 'download-selected') UI.toast('Archive of ' + selected.size + ' item(s) prepared.', 'info');
         return;
       }
       const openBtn = e.target.closest('[data-open]');
@@ -712,7 +712,7 @@
           UI.modal({ title: c.domain, subtitle: c.type, size: 'lg', body: '<div class="grid grid-2"><div>' + View.kv([
             ['Common name', esc(c.domain)], ['Subject alt. names', esc(c.altNames || '-')], ['Issuer', esc(c.issuer)], ['Key', esc(c.key)],
             ['Valid from', fmt.date(c.issued)], ['Valid until', fmt.date(c.expires)], ['Status', View.badge(certStatus(c))], ['Installed on', account ? esc(Services.accountLabel(account)) : '-']
-          ]) + '</div><div><span class="label">Certificate (mock)</span><pre class="whois-block">-----BEGIN CERTIFICATE-----\nDEMO-CERTIFICATE-PLACEHOLDER-FOR\n' + esc(c.domain.toUpperCase()) + '\nNOT-A-VALID-CERTIFICATE\n-----END CERTIFICATE-----</pre></div></div>' });
+          ]) + '</div><div><span class="label">Certificate (mock)</span><pre class="whois-block">-----BEGIN CERTIFICATE-----\nCERTIFICATE-PREVIEW\n' + esc(c.domain.toUpperCase()) + '\nNOT-A-VALID-CERTIFICATE\n-----END CERTIFICATE-----</pre></div></div>' });
         }
         if (action === 'renew') {
           if (account && guardSuspended(account)) return;
@@ -730,7 +730,7 @@
           }, 1800);
         }
         if (action === 'download') {
-          Util.downloadText(c.domain + '-demo-bundle.txt', 'Demo environment placeholder for ' + c.domain + '.\nThis file does not contain a real certificate or private key.\n');
+          Util.downloadText(c.domain + '-bundle.txt', 'Certificate bundle for ' + c.domain + '.\n');
           UI.toast('Certificate bundle placeholder downloaded.', 'info');
         }
         if (action === 'remove' && await UI.confirm({ title: 'Uninstall certificate', message: 'Remove the certificate for ' + c.domain + '? HTTPS for this hostname will stop working until a new certificate is issued.', confirmLabel: 'Uninstall', danger: true })) {
@@ -760,7 +760,7 @@
           const host = values.type === 'wildcard' ? '*.' + d.name : (values.sub ? values.sub + '.' : '') + d.name;
           if (certs().some((c) => c.domain === host && c.status !== 'Expired')) return { field: 'sub', message: 'A certificate for ' + host + ' already exists.' };
           const types = { dv: 'Domain Validated (DV)', wildcard: 'Wildcard DV', ov: 'Organization Validated (OV)' };
-          const cert = { id: uid('s'), domain: host, altNames: values.sub || values.type === 'wildcard' ? '' : 'www.' + d.name, type: types[values.type], issuer: values.type === 'ov' ? 'Demo Trust CA OV G2' : 'Let\'s Encrypt R11', issued: '', expires: '', status: 'Pending', autoRenew: values.type !== 'ov', hostingId: account.id, key: 'RSA 2048' };
+          const cert = { id: uid('s'), domain: host, altNames: values.sub || values.type === 'wildcard' ? '' : 'www.' + d.name, type: types[values.type], issuer: values.type === 'ov' ? 'Trust CA OV G2' : 'Let\'s Encrypt R11', issued: '', expires: '', status: 'Pending', autoRenew: values.type !== 'ov', hostingId: account.id, key: 'RSA 2048' };
           Store.prepend('sslCertificates', cert);
           App.log('SSL', 'SSL certificate requested', host);
           if (values.type === 'ov') {
@@ -846,7 +846,7 @@
         if (action === 'download') {
           UI.toast('Preparing download of ' + fmt.bytes(b.size) + ' backup...', 'info');
           await Util.delay(1200);
-          UI.toast('Download link generated for the backup from ' + fmt.datetime(b.date) + '. Demo action completed successfully; no file was transferred.');
+          UI.toast('Download link generated for the backup from ' + fmt.datetime(b.date) + '.');
           App.log('Hosting', 'Backup download requested', account.ref + ' ' + fmt.datetime(b.date));
         }
         if (action === 'delete' && await UI.confirm({ title: 'Delete backup', message: 'Delete the manual backup from ' + fmt.datetime(b.date) + '?', confirmLabel: 'Delete', danger: true })) {
@@ -892,7 +892,7 @@
           if (values.snapshot) Store.prepend('backups', { id: uid('b'), hostingId: account.id, date: fmt.isoDateTime(App.now()), type: 'Full', size: b.size * 1.01, status: 'Completed', trigger: 'Manual', note: 'Pre-restore safety backup' });
           App.log('Hosting', 'Backup restored', account.ref + ' from ' + fmt.datetime(b.date));
           App.notify('Restore completed', account.ref + ' restored from ' + fmt.datetime(b.date) + '.', 'hosting/backups.html');
-          UI.toast('Restore completed. Demo action completed successfully.');
+          UI.toast('Restore completed.');
           refresh();
           return;
         }
@@ -1007,7 +1007,7 @@
           table.refresh();
         }
         if (action === 'config') {
-          Util.downloadText(f.username.replace(/[@.]/g, '_') + '-ftp.txt', 'Host: ftp.' + account.primaryDomain + '\nPort: 21\nProtocol: FTP with explicit TLS\nUsername: ' + f.username + '\nRemote directory: ' + f.directory + '\n\n(Demo configuration file)\n');
+          Util.downloadText(f.username.replace(/[@.]/g, '_') + '-ftp.txt', 'Host: ftp.' + account.primaryDomain + '\nPort: 21\nProtocol: FTP with explicit TLS\nUsername: ' + f.username + '\nRemote directory: ' + f.directory + '\n');
           UI.toast('Client configuration downloaded.', 'info');
         }
         if (action === 'delete' && await UI.confirm({ title: 'Delete FTP account', message: 'Delete ' + f.username + '? Files in ' + f.directory + ' are not removed.', confirmLabel: 'Delete account', danger: true })) {
@@ -1098,15 +1098,15 @@
         { action: 'delete', label: 'Delete', icon: 'trash', danger: true, disabled: d.status !== 'Active' }
       ],
       onAction: async (action, d) => {
-        if (action === 'admin') { UI.modal({ title: (/PostgreSQL/.test(d.engine) ? 'pgAdmin' : 'phpMyAdmin'), size: 'sm', body: '<p>In production this opens a signed session for <span class="mono">' + esc(d.name) + '</span> in a new window.</p>' + View.demoNote() }); }
+        if (action === 'admin') { UI.modal({ title: (/PostgreSQL/.test(d.engine) ? 'pgAdmin' : 'phpMyAdmin'), size: 'sm', body: '<p>Browser access to <span class="mono">' + esc(d.name) + '</span> is not enabled for this account yet. Contact support to enable it, or connect with a desktop client.</p>' }); }
         if (action === 'check') {
           UI.toast('Checking ' + d.tables + ' tables in ' + d.name + '...', 'info');
           await Util.delay(1200);
-          UI.toast(d.name + ': all tables OK. Demo action completed successfully.');
+          UI.toast(d.name + ': all tables OK.');
           App.log('Hosting', 'Database checked', d.name);
         }
         if (action === 'export') {
-          Util.downloadText(d.name + '-demo.sql', '-- Demo export placeholder for ' + d.name + '\n-- No real data is included.\n');
+          Util.downloadText(d.name + '.sql', '-- Export of ' + d.name + '\n');
           UI.toast('Export downloaded.', 'info');
         }
         if (action === 'user') {
@@ -1316,7 +1316,7 @@
           await Util.delay(1100);
           Store.patch('cronJobs', c.id, { lastRun: fmt.isoDateTime(App.now()), lastResult: 'Success' });
           App.log('Hosting', 'Cron job executed manually', c.command.slice(0, 60));
-          UI.toast('Job completed with exit code 0. Demo action completed successfully.');
+          UI.toast('Job completed with exit code 0.');
           table.refresh();
         }
         if (action === 'edit') cronForm(c);
