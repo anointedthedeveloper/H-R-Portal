@@ -11,7 +11,7 @@ A frontend-only prototype of a hosting and domain management client portal, buil
 | Email    | `devswork98@gmail.com` |
 | Password | `V7mQ9xL2#pR8!zK4`     |
 
-The login page also has a **Fill demo credentials** button. If you turn on two-factor authentication under Security, sign-in will ask for a code. Any six digits are accepted.
+If you turn on two-factor authentication under Security, sign-in will ask for a code. Any six digits are accepted.
 
 ## Running locally
 

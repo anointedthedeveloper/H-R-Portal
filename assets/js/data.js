@@ -5,7 +5,7 @@
  * The Store (app.js) copies these seeds into localStorage on first use.
  */
 window.MockData = {
-  version: 3,
+  version: 4,
   demoDate: '2026-09-30',
 
   profile: {
@@ -101,10 +101,10 @@ window.MockData = {
   cart: [],
 
   hostingPlans: [
-    { id: 'starter', name: 'Starter Hosting', price: 4.99, storageGB: 10, bandwidthGB: 100, websites: 1, databases: 2, emails: 5, ssl: 'Free DV', backups: 'Weekly', cpu: 1, ramGB: 1, inodes: 100000, processes: 20 },
-    { id: 'business', name: 'Business Hosting', price: 14.99, storageGB: 50, bandwidthGB: 500, websites: 10, databases: 20, emails: 50, ssl: 'Free DV', backups: 'Daily', cpu: 2, ramGB: 4, inodes: 400000, processes: 60 },
-    { id: 'professional', name: 'Professional Hosting', price: 24.99, storageGB: 100, bandwidthGB: 1000, websites: 25, databases: 50, emails: 100, ssl: 'Free DV + Wildcard', backups: 'Daily', cpu: 4, ramGB: 8, inodes: 800000, processes: 100 },
-    { id: 'enterprise', name: 'Enterprise Hosting', price: 89.0, storageGB: 250, bandwidthGB: 5000, websites: 100, databases: 200, emails: 500, ssl: 'Free DV + OV support', backups: 'Hourly snapshots', cpu: 8, ramGB: 16, inodes: 2000000, processes: 200 }
+    { id: 'starter', name: 'Starter Hosting', price: 2.99, renewPrice: 10.99, storageGB: 10, bandwidthGB: 100, websites: 1, databases: 2, emails: 5, ssl: 'Free DV', backups: 'Weekly', cpu: 1, ramGB: 1, inodes: 100000, processes: 20 },
+    { id: 'business', name: 'Business Hosting', price: 3.99, renewPrice: 16.99, storageGB: 50, bandwidthGB: 500, websites: 10, databases: 20, emails: 50, ssl: 'Free DV', backups: 'Daily', cpu: 2, ramGB: 4, inodes: 400000, processes: 60 },
+    { id: 'professional', name: 'Professional Hosting', price: 7.99, renewPrice: 25.99, storageGB: 100, bandwidthGB: 1000, websites: 25, databases: 50, emails: 100, ssl: 'Free DV + Wildcard', backups: 'Daily', cpu: 4, ramGB: 8, inodes: 800000, processes: 100 },
+    { id: 'enterprise', name: 'Enterprise Hosting', price: 15.99, renewPrice: 44.99, storageGB: 250, bandwidthGB: 5000, websites: 100, databases: 200, emails: 500, ssl: 'Free DV + OV support', backups: 'Hourly snapshots', cpu: 8, ramGB: 16, inodes: 2000000, processes: 200 }
   ],
 
   hostingAccounts: [
@@ -237,7 +237,7 @@ window.MockData = {
   catchAll: { 'exampleclient.com': 'reject', 'brightlane-studio.com': 'hello@brightlane-studio.com', 'kestrel-labs.io': 'reject', 'orchardmarket.com.ng': 'reject', 'exampleclient.ng': 'reject' },
 
   messages: [
-    { id: 'msg1', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Billing Department (Demo)', from: 'billing@portal.invalid', to: 'admin@exampleclient.com', subject: 'Invoice INV-2026-0452 generated', date: '2026-09-30T08:02:00', read: false, starred: true, body: 'Hello Jordan,\n\nInvoice INV-2026-0452 for $138.00 has been generated for the renewal of kestrel-labs.io and Enterprise Hosting (HST-11032).\n\nDue date: 15 Oct 2026\n\nYou can view and pay this invoice from the Billing section of the client portal.\n\nRegards,\nBilling Department' },
+    { id: 'msg1', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Billing Department (Demo)', from: 'billing@portal.invalid', to: 'admin@exampleclient.com', subject: 'Invoice INV-2026-0452 generated', date: '2026-09-30T08:02:00', read: false, starred: true, body: 'Hello Jordan,\n\nInvoice INV-2026-0452 for $64.99 has been generated for the renewal of kestrel-labs.io and Enterprise Hosting (HST-11032).\n\nDue date: 15 Oct 2026\n\nYou can view and pay this invoice from the Billing section of the client portal.\n\nRegards,\nBilling Department' },
     { id: 'msg2', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Backup Service', from: 'backups@portal.invalid', to: 'admin@exampleclient.com', subject: 'Backup completed: HST-10421 (8.42 GB)', date: '2026-09-30T02:19:00', read: false, starred: false, body: 'The scheduled full backup of HST-10421 completed successfully.\n\nSize: 8.42 GB\nDuration: 18 minutes\nRetention: 14 days\n\nNo action is required.' },
     { id: 'msg3', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Priya Raman', from: 'priya@exampleclient.com', to: 'admin@exampleclient.com', subject: 'Re: Staging site DNS', date: '2026-09-29T16:48:00', read: true, starred: false, body: 'Hi Jordan,\n\nI have added the staging CNAME. It should resolve within the hour. Can you check that the SSL certificate picks it up on the next renewal?\n\nThanks,\nPriya' },
     { id: 'msg4', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'SSL Monitor', from: 'ssl@portal.invalid', to: 'admin@exampleclient.com', subject: 'SSL certificate for orchardmarket.com.ng has expired', date: '2026-09-08T00:05:00', read: true, starred: false, body: 'The certificate for orchardmarket.com.ng expired on 08 Sep 2026 and could not be renewed automatically because the hosting account HST-11217 is suspended.\n\nSettle invoice INV-2026-0418 to restore the account. Renewal will run automatically afterwards.' },
@@ -245,16 +245,16 @@ window.MockData = {
     { id: 'msg6', mailbox: 'admin@exampleclient.com', folder: 'Inbox', fromName: 'Domain Services', from: 'domains@portal.invalid', to: 'admin@exampleclient.com', subject: 'kestrel-labs.io expires in 22 days', date: '2026-09-30T06:00:00', read: false, starred: false, body: 'The domain kestrel-labs.io expires on 22 Oct 2026. Auto-renewal is disabled for this domain.\n\nRenew it from the Domains section to avoid service interruption.' },
     { id: 'msg7', mailbox: 'admin@exampleclient.com', folder: 'Sent', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'priya@exampleclient.com', subject: 'Staging site DNS', date: '2026-09-29T15:10:00', read: true, starred: false, body: 'Hi Priya,\n\nCould you add a CNAME for staging pointing at the main site? We need it for the review on Thursday.\n\nJordan' },
     { id: 'msg8', mailbox: 'admin@exampleclient.com', folder: 'Sent', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'tomasz@exampleclient.com', subject: 'Cron failure on rotate-logs.sh', date: '2026-09-27T09:02:00', read: true, starred: false, body: 'Tomasz, the weekly log rotation job exited with status 1 on Sunday. Can you take a look?' },
-    { id: 'msg9', mailbox: 'admin@exampleclient.com', folder: 'Drafts', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'amara@exampleclient.com', subject: 'Q4 hosting budget', date: '2026-09-26T18:30:00', read: true, starred: false, body: 'Amara,\n\nDraft figures for Q4 hosting spend:\n- Enterprise Hosting: $267.00\n- Professional Hosting: $74.97\n' },
+    { id: 'msg9', mailbox: 'admin@exampleclient.com', folder: 'Drafts', fromName: 'Jordan Ellis', from: 'admin@exampleclient.com', to: 'amara@exampleclient.com', subject: 'Q4 hosting budget', date: '2026-09-26T18:30:00', read: true, starred: false, body: 'Amara,\n\nDraft figures for Q4 hosting spend:\n- Enterprise Hosting: $47.97\n- Professional Hosting: $23.97\n' },
     { id: 'msg10', mailbox: 'admin@exampleclient.com', folder: 'Spam', fromName: 'Prize Desk', from: 'winner@spam.invalid', to: 'admin@exampleclient.com', subject: 'You have been selected', date: '2026-09-25T04:11:00', read: false, starred: false, body: 'This message was classified as spam by the demo filter.' },
     { id: 'msg11', mailbox: 'admin@exampleclient.com', folder: 'Trash', fromName: 'Newsletter', from: 'news@newsletter.invalid', to: 'admin@exampleclient.com', subject: 'September product digest', date: '2026-09-15T10:00:00', read: true, starred: false, body: 'Monthly digest (demo content).' }
   ],
 
   subscriptions: [
-    { id: 'sub1', service: 'HST-10421 exampleclient.com', category: 'Hosting', plan: 'Business Hosting', price: 179.88, cycle: 'Annually', nextRenewal: '2026-12-18', status: 'Active', autoRenew: true, relatedId: 'h1' },
-    { id: 'sub2', service: 'HST-10588 brightlane-studio.com', category: 'Hosting', plan: 'Professional Hosting', price: 24.99, cycle: 'Monthly', nextRenewal: '2026-10-11', status: 'Active', autoRenew: true, relatedId: 'h2' },
-    { id: 'sub3', service: 'HST-11032 kestrel-labs.io', category: 'Hosting', plan: 'Enterprise Hosting', price: 89.0, cycle: 'Monthly', nextRenewal: '2026-10-22', status: 'Active', autoRenew: true, relatedId: 'h3' },
-    { id: 'sub4', service: 'HST-11217 orchardmarket.com.ng', category: 'Hosting', plan: 'Starter Hosting', price: 59.88, cycle: 'Annually', nextRenewal: '2026-09-15', status: 'Suspended', autoRenew: true, relatedId: 'h4' },
+    { id: 'sub1', service: 'HST-10421 exampleclient.com', category: 'Hosting', plan: 'Business Hosting', price: 47.88, cycle: 'Annually', nextRenewal: '2026-12-18', status: 'Active', autoRenew: true, relatedId: 'h1' },
+    { id: 'sub2', service: 'HST-10588 brightlane-studio.com', category: 'Hosting', plan: 'Professional Hosting', price: 7.99, cycle: 'Monthly', nextRenewal: '2026-10-11', status: 'Active', autoRenew: true, relatedId: 'h2' },
+    { id: 'sub3', service: 'HST-11032 kestrel-labs.io', category: 'Hosting', plan: 'Enterprise Hosting', price: 15.99, cycle: 'Monthly', nextRenewal: '2026-10-22', status: 'Active', autoRenew: true, relatedId: 'h3' },
+    { id: 'sub4', service: 'HST-11217 orchardmarket.com.ng', category: 'Hosting', plan: 'Starter Hosting', price: 35.88, cycle: 'Annually', nextRenewal: '2026-09-15', status: 'Suspended', autoRenew: true, relatedId: 'h4' },
     { id: 'sub5', service: 'exampleclient.com', category: 'Domain', plan: 'Domain registration (.com)', price: 13.99, cycle: 'Annually', nextRenewal: '2026-12-18', status: 'Active', autoRenew: true, relatedId: 'd1' },
     { id: 'sub6', service: 'exampleclient.ng', category: 'Domain', plan: 'Domain registration (.ng)', price: 17.5, cycle: 'Annually', nextRenewal: '2027-03-04', status: 'Active', autoRenew: true, relatedId: 'd2' },
     { id: 'sub7', service: 'brightlane-studio.com', category: 'Domain', plan: 'Domain registration (.com)', price: 13.99, cycle: 'Annually', nextRenewal: '2027-06-11', status: 'Active', autoRenew: false, relatedId: 'd3' },
@@ -264,33 +264,33 @@ window.MockData = {
   ],
 
   invoices: [
-    { id: 'INV-2026-0452', date: '2026-09-30', due: '2026-10-15', status: 'Unpaid', items: [ { description: 'Domain renewal - kestrel-labs.io (1 year) 22 Oct 2026 - 22 Oct 2027', amount: 49.0, relatedId: 'd4' }, { description: 'Enterprise Hosting HST-11032 (22 Oct 2026 - 21 Nov 2026)', amount: 89.0, relatedId: 'h3' } ] },
-    { id: 'INV-2026-0447', date: '2026-09-27', due: '2026-10-11', status: 'Unpaid', items: [ { description: 'Professional Hosting HST-10588 (11 Oct 2026 - 10 Nov 2026)', amount: 24.99, relatedId: 'h2' } ] },
-    { id: 'INV-2026-0440', date: '2026-09-08', due: '2026-09-22', status: 'Paid', paidOn: '2026-09-21', method: 'Visa ending 4242', items: [ { description: 'Enterprise Hosting HST-11032 (22 Sep 2026 - 21 Oct 2026)', amount: 89.0, relatedId: 'h3' } ] },
-    { id: 'INV-2026-0436', date: '2026-08-28', due: '2026-09-11', status: 'Paid', paidOn: '2026-09-11', method: 'Visa ending 4242', items: [ { description: 'Professional Hosting HST-10588 (11 Sep 2026 - 10 Oct 2026)', amount: 24.99, relatedId: 'h2' } ] },
+    { id: 'INV-2026-0452', date: '2026-09-30', due: '2026-10-15', status: 'Unpaid', items: [ { description: 'Domain renewal - kestrel-labs.io (1 year) 22 Oct 2026 - 22 Oct 2027', amount: 49.0, relatedId: 'd4' }, { description: 'Enterprise Hosting HST-11032 (22 Oct 2026 - 21 Nov 2026)', amount: 15.99, relatedId: 'h3' } ] },
+    { id: 'INV-2026-0447', date: '2026-09-27', due: '2026-10-11', status: 'Unpaid', items: [ { description: 'Professional Hosting HST-10588 (11 Oct 2026 - 10 Nov 2026)', amount: 7.99, relatedId: 'h2' } ] },
+    { id: 'INV-2026-0440', date: '2026-09-08', due: '2026-09-22', status: 'Paid', paidOn: '2026-09-21', method: 'Visa ending 4242', items: [ { description: 'Enterprise Hosting HST-11032 (22 Sep 2026 - 21 Oct 2026)', amount: 15.99, relatedId: 'h3' } ] },
+    { id: 'INV-2026-0436', date: '2026-08-28', due: '2026-09-11', status: 'Paid', paidOn: '2026-09-11', method: 'Visa ending 4242', items: [ { description: 'Professional Hosting HST-10588 (11 Sep 2026 - 10 Oct 2026)', amount: 7.99, relatedId: 'h2' } ] },
     { id: 'INV-2026-0433', date: '2026-08-13', due: '2026-09-12', status: 'Cancelled', items: [ { description: 'Domain renewal - summit-archive.org (1 year)', amount: 15.99, relatedId: 'd6' } ] },
-    { id: 'INV-2026-0428', date: '2026-08-08', due: '2026-08-22', status: 'Paid', paidOn: '2026-08-22', method: 'Visa ending 4242', items: [ { description: 'Enterprise Hosting HST-11032 (22 Aug 2026 - 21 Sep 2026)', amount: 89.0, relatedId: 'h3' } ] },
-    { id: 'INV-2026-0421', date: '2026-07-28', due: '2026-08-11', status: 'Paid', paidOn: '2026-08-10', method: 'Mastercard ending 5100', items: [ { description: 'Professional Hosting HST-10588 (11 Aug 2026 - 10 Sep 2026)', amount: 24.99, relatedId: 'h2' } ] },
-    { id: 'INV-2026-0418', date: '2026-08-15', due: '2026-09-01', status: 'Overdue', items: [ { description: 'Starter Hosting HST-11217 (15 Sep 2026 - 14 Sep 2027)', amount: 59.88, relatedId: 'h4' } ] },
-    { id: 'INV-2026-0409', date: '2026-07-08', due: '2026-07-22', status: 'Paid', paidOn: '2026-07-22', method: 'Visa ending 4242', items: [ { description: 'Enterprise Hosting HST-11032 (22 Jul 2026 - 21 Aug 2026)', amount: 89.0, relatedId: 'h3' } ] },
-    { id: 'INV-2026-0395', date: '2026-05-28', due: '2026-06-11', status: 'Paid', paidOn: '2026-06-09', method: 'Bank transfer', items: [ { description: 'Domain renewal - brightlane-studio.com (1 year)', amount: 13.99, relatedId: 'd3' }, { description: 'Professional Hosting HST-10588 (11 Jun 2026 - 10 Jul 2026)', amount: 24.99, relatedId: 'h2' } ] },
+    { id: 'INV-2026-0428', date: '2026-08-08', due: '2026-08-22', status: 'Paid', paidOn: '2026-08-22', method: 'Visa ending 4242', items: [ { description: 'Enterprise Hosting HST-11032 (22 Aug 2026 - 21 Sep 2026)', amount: 15.99, relatedId: 'h3' } ] },
+    { id: 'INV-2026-0421', date: '2026-07-28', due: '2026-08-11', status: 'Paid', paidOn: '2026-08-10', method: 'Mastercard ending 5100', items: [ { description: 'Professional Hosting HST-10588 (11 Aug 2026 - 10 Sep 2026)', amount: 7.99, relatedId: 'h2' } ] },
+    { id: 'INV-2026-0418', date: '2026-08-15', due: '2026-09-01', status: 'Overdue', items: [ { description: 'Starter Hosting HST-11217 (15 Sep 2026 - 14 Sep 2027)', amount: 35.88, relatedId: 'h4' } ] },
+    { id: 'INV-2026-0409', date: '2026-07-08', due: '2026-07-22', status: 'Paid', paidOn: '2026-07-22', method: 'Visa ending 4242', items: [ { description: 'Enterprise Hosting HST-11032 (22 Jul 2026 - 21 Aug 2026)', amount: 15.99, relatedId: 'h3' } ] },
+    { id: 'INV-2026-0395', date: '2026-05-28', due: '2026-06-11', status: 'Paid', paidOn: '2026-06-09', method: 'Bank transfer', items: [ { description: 'Domain renewal - brightlane-studio.com (1 year)', amount: 13.99, relatedId: 'd3' }, { description: 'Professional Hosting HST-10588 (11 Jun 2026 - 10 Jul 2026)', amount: 7.99, relatedId: 'h2' } ] },
     { id: 'INV-2026-0371', date: '2026-01-20', due: '2026-02-03', status: 'Paid', paidOn: '2026-02-02', method: 'Visa ending 4242', items: [ { description: 'Organization Validated SSL - kestrel-labs.io (1 year)', amount: 129.0, relatedId: 's4' } ] },
-    { id: 'INV-2025-1187', date: '2025-12-04', due: '2025-12-18', status: 'Refunded', paidOn: '2025-12-16', method: 'Visa ending 4242', items: [ { description: 'Business Hosting HST-10421 (18 Dec 2025 - 17 Dec 2026)', amount: 179.88, relatedId: 'h1' }, { description: 'Domain renewal - exampleclient.com (1 year)', amount: 13.99, relatedId: 'd1' } ] }
+    { id: 'INV-2025-1187', date: '2025-12-04', due: '2025-12-18', status: 'Refunded', paidOn: '2025-12-16', method: 'Visa ending 4242', items: [ { description: 'Business Hosting HST-10421 (18 Dec 2025 - 17 Dec 2026)', amount: 47.88, relatedId: 'h1' }, { description: 'Domain renewal - exampleclient.com (1 year)', amount: 13.99, relatedId: 'd1' } ] }
   ],
 
   transactions: [
-    { id: 'TXN-884120', date: '2026-09-21T10:14:00', description: 'Payment for INV-2026-0440', type: 'Payment', method: 'Visa ending 4242', amount: 89.0, status: 'Completed', invoiceId: 'INV-2026-0440' },
-    { id: 'TXN-883702', date: '2026-09-11T08:02:00', description: 'Payment for INV-2026-0436', type: 'Payment', method: 'Visa ending 4242', amount: 24.99, status: 'Completed', invoiceId: 'INV-2026-0436' },
-    { id: 'TXN-883655', date: '2026-09-02T02:10:00', description: 'Automatic charge for INV-2026-0418', type: 'Payment', method: 'Mastercard ending 5100', amount: 59.88, status: 'Failed', invoiceId: 'INV-2026-0418', note: 'Card declined by issuer (demo)' },
-    { id: 'TXN-882903', date: '2026-08-22T09:41:00', description: 'Payment for INV-2026-0428', type: 'Payment', method: 'Visa ending 4242', amount: 89.0, status: 'Completed', invoiceId: 'INV-2026-0428' },
-    { id: 'TXN-882410', date: '2026-08-10T17:20:00', description: 'Payment for INV-2026-0421', type: 'Payment', method: 'Mastercard ending 5100', amount: 24.99, status: 'Completed', invoiceId: 'INV-2026-0421' },
-    { id: 'TXN-881877', date: '2026-07-22T07:55:00', description: 'Payment for INV-2026-0409', type: 'Payment', method: 'Visa ending 4242', amount: 89.0, status: 'Completed', invoiceId: 'INV-2026-0409' },
+    { id: 'TXN-884120', date: '2026-09-21T10:14:00', description: 'Payment for INV-2026-0440', type: 'Payment', method: 'Visa ending 4242', amount: 15.99, status: 'Completed', invoiceId: 'INV-2026-0440' },
+    { id: 'TXN-883702', date: '2026-09-11T08:02:00', description: 'Payment for INV-2026-0436', type: 'Payment', method: 'Visa ending 4242', amount: 7.99, status: 'Completed', invoiceId: 'INV-2026-0436' },
+    { id: 'TXN-883655', date: '2026-09-02T02:10:00', description: 'Automatic charge for INV-2026-0418', type: 'Payment', method: 'Mastercard ending 5100', amount: 35.88, status: 'Failed', invoiceId: 'INV-2026-0418', note: 'Card declined by issuer (demo)' },
+    { id: 'TXN-882903', date: '2026-08-22T09:41:00', description: 'Payment for INV-2026-0428', type: 'Payment', method: 'Visa ending 4242', amount: 15.99, status: 'Completed', invoiceId: 'INV-2026-0428' },
+    { id: 'TXN-882410', date: '2026-08-10T17:20:00', description: 'Payment for INV-2026-0421', type: 'Payment', method: 'Mastercard ending 5100', amount: 7.99, status: 'Completed', invoiceId: 'INV-2026-0421' },
+    { id: 'TXN-881877', date: '2026-07-22T07:55:00', description: 'Payment for INV-2026-0409', type: 'Payment', method: 'Visa ending 4242', amount: 15.99, status: 'Completed', invoiceId: 'INV-2026-0409' },
     { id: 'TXN-881240', date: '2026-07-01T00:00:00', description: 'Service credit - network incident 24 Jun 2026', type: 'Credit', method: 'Account credit', amount: 12.5, status: 'Completed' },
-    { id: 'TXN-880918', date: '2026-06-09T12:30:00', description: 'Payment for INV-2026-0395', type: 'Payment', method: 'Bank transfer', amount: 38.98, status: 'Completed', invoiceId: 'INV-2026-0395' },
+    { id: 'TXN-880918', date: '2026-06-09T12:30:00', description: 'Payment for INV-2026-0395', type: 'Payment', method: 'Bank transfer', amount: 21.98, status: 'Completed', invoiceId: 'INV-2026-0395' },
     { id: 'TXN-878302', date: '2026-02-02T15:05:00', description: 'Payment for INV-2026-0371', type: 'Payment', method: 'Visa ending 4242', amount: 129.0, status: 'Completed', invoiceId: 'INV-2026-0371' },
-    { id: 'TXN-876011', date: '2025-12-20T11:45:00', description: 'Refund for INV-2025-1187 (duplicate charge)', type: 'Refund', method: 'Visa ending 4242', amount: 193.87, status: 'Completed', invoiceId: 'INV-2025-1187' },
-    { id: 'TXN-875990', date: '2025-12-16T09:12:00', description: 'Payment for INV-2025-1187', type: 'Payment', method: 'Visa ending 4242', amount: 193.87, status: 'Completed', invoiceId: 'INV-2025-1187' },
-    { id: 'TXN-875991', date: '2025-12-16T09:13:00', description: 'Payment for INV-2025-1187', type: 'Payment', method: 'Visa ending 4242', amount: 193.87, status: 'Completed', invoiceId: 'INV-2025-1187', note: 'Duplicate authorisation' }
+    { id: 'TXN-876011', date: '2025-12-20T11:45:00', description: 'Refund for INV-2025-1187 (duplicate charge)', type: 'Refund', method: 'Visa ending 4242', amount: 61.87, status: 'Completed', invoiceId: 'INV-2025-1187' },
+    { id: 'TXN-875990', date: '2025-12-16T09:12:00', description: 'Payment for INV-2025-1187', type: 'Payment', method: 'Visa ending 4242', amount: 61.87, status: 'Completed', invoiceId: 'INV-2025-1187' },
+    { id: 'TXN-875991', date: '2025-12-16T09:13:00', description: 'Payment for INV-2025-1187', type: 'Payment', method: 'Visa ending 4242', amount: 61.87, status: 'Completed', invoiceId: 'INV-2025-1187', note: 'Duplicate authorisation' }
   ],
 
   paymentMethods: [
@@ -425,13 +425,13 @@ window.MockData = {
   ],
 
   activity: [
-    { id: 'a1', date: '2026-09-30T08:02:00', category: 'Billing', action: 'Invoice generated', target: 'INV-2026-0452 ($138.00)', user: 'System', ip: '-' },
+    { id: 'a1', date: '2026-09-30T08:02:00', category: 'Billing', action: 'Invoice generated', target: 'INV-2026-0452 ($64.99)', user: 'System', ip: '-' },
     { id: 'a2', date: '2026-09-30T07:41:00', category: 'DNS', action: 'DNS record updated', target: 'TXT _dmarc.exampleclient.com', user: 'API: CI deployment', ip: '192.0.2.201' },
     { id: 'a3', date: '2026-09-30T02:19:00', category: 'Hosting', action: 'Backup completed', target: 'HST-10421 full backup (8.42 GB)', user: 'System', ip: '-' },
     { id: 'a4', date: '2026-09-30T08:31:00', category: 'Security', action: 'Login detected', target: 'Chrome on macOS, London, UK', user: 'Jordan Ellis', ip: '198.51.100.42' },
     { id: 'a5', date: '2026-09-29T16:40:00', category: 'DNS', action: 'DNS record added', target: 'CNAME staging.exampleclient.com', user: 'Priya Raman', ip: '198.51.100.63' },
     { id: 'a6', date: '2026-09-25T00:04:00', category: 'SSL', action: 'SSL certificate issued', target: 'staging.kestrel-labs.io', user: 'System', ip: '-' },
-    { id: 'a7', date: '2026-09-21T10:14:00', category: 'Billing', action: 'Payment received', target: 'INV-2026-0440 ($89.00)', user: 'Jordan Ellis', ip: '198.51.100.42' },
+    { id: 'a7', date: '2026-09-21T10:14:00', category: 'Billing', action: 'Payment received', target: 'INV-2026-0440 ($15.99)', user: 'Jordan Ellis', ip: '198.51.100.42' },
     { id: 'a8', date: '2026-09-16T00:00:00', category: 'Hosting', action: 'Hosting account suspended', target: 'HST-11217 (overdue INV-2026-0418)', user: 'System', ip: '-' },
     { id: 'a9', date: '2026-09-12T00:00:00', category: 'Domains', action: 'Domain expired', target: 'summit-archive.org', user: 'System', ip: '-' },
     { id: 'a10', date: '2026-09-02T02:10:00', category: 'Billing', action: 'Payment failed', target: 'INV-2026-0418 (Mastercard ending 5100)', user: 'System', ip: '-' },
@@ -441,7 +441,7 @@ window.MockData = {
 
   notifications: [
     { id: 'n1', title: 'kestrel-labs.io expires in 22 days', text: 'Auto-renewal is off. Renew before 22 Oct 2026.', date: '2026-09-30T06:00:00', read: false, link: 'domains/index.html' },
-    { id: 'n2', title: 'Invoice INV-2026-0452 generated', text: '$138.00 due 15 Oct 2026.', date: '2026-09-30T08:02:00', read: false, link: 'billing/invoices.html?id=INV-2026-0452' },
+    { id: 'n2', title: 'Invoice INV-2026-0452 generated', text: '$64.99 due 15 Oct 2026.', date: '2026-09-30T08:02:00', read: false, link: 'billing/invoices.html?id=INV-2026-0452' },
     { id: 'n3', title: 'HST-11217 is suspended', text: 'Pay overdue invoice INV-2026-0418 to reactivate.', date: '2026-09-16T00:00:00', read: false, link: 'billing/invoices.html?id=INV-2026-0418' },
     { id: 'n4', title: 'New reply on TKT-58231', text: 'Billing replied to your ticket.', date: '2026-09-29T11:40:00', read: true, link: 'support/ticket.html?id=TKT-58231' },
     { id: 'n5', title: 'Backup completed', text: 'HST-10421 full backup, 8.42 GB.', date: '2026-09-30T02:19:00', read: true, link: 'hosting/backups.html' },

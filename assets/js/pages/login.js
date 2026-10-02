@@ -62,7 +62,6 @@
           '<button type="button" class="link-btn" id="forgot-link">Forgot password?</button></div>' +
           '<button type="submit" class="btn btn-primary btn-lg btn-block" id="login-submit">Sign in</button>' +
         '</form>' +
-        '<div class="demo-box mt-16"><span>Demo account available.<br><span class="muted">Credentials are listed in README.md.</span></span><button type="button" class="btn btn-secondary btn-sm" id="fill-demo">Fill demo credentials</button></div>' +
         '<p class="auth-foot">This is a demo environment. It is not a real registrar or hosting provider, and signing in does not contact any authentication service.</p>';
 
       const form = card.querySelector('#login-form');
@@ -74,11 +73,6 @@
       ];
       (remembered ? form.elements.password : form.elements.email).focus();
 
-      card.querySelector('#fill-demo').addEventListener('click', () => {
-        form.elements.email.value = Auth.demoEmail;
-        form.elements.password.value = 'V7mQ9xL2#pR8!zK4';
-        form.elements.password.focus();
-      });
       card.querySelector('#forgot-link').addEventListener('click', () => showForgot(form.elements.email.value));
 
       form.addEventListener('submit', async (e) => {

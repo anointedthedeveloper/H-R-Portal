@@ -139,7 +139,7 @@
       View.panel({
         title: 'Plan comparison', flush: true,
         body: '<div class="table-wrap"><table class="table"><thead><tr><th>Plan</th><th>Price</th><th>Storage</th><th>Bandwidth</th><th>Websites</th><th>Databases</th><th>Email</th><th>CPU / RAM</th><th>Backups</th><th>SSL</th></tr></thead><tbody>' +
-          plans.map((p) => '<tr><td><strong>' + p.name + '</strong></td><td>' + fmt.money(p.price) + '/mo</td><td>' + p.storageGB + ' GB</td><td>' + fmt.number(p.bandwidthGB) + ' GB</td><td>' + p.websites + '</td><td>' + p.databases + '</td><td>' + p.emails + '</td><td>' + p.cpu + ' / ' + p.ramGB + ' GB</td><td>' + p.backups + '</td><td>' + p.ssl + '</td></tr>').join('') + '</tbody></table></div>'
+          plans.map((p) => '<tr><td><strong>' + p.name + '</strong></td><td>' + fmt.money(p.price) + '/mo<span class="cell-sub">renews at ' + fmt.money(p.renewPrice) + '/mo</span></td><td>' + p.storageGB + ' GB</td><td>' + fmt.number(p.bandwidthGB) + ' GB</td><td>' + p.websites + '</td><td>' + p.databases + '</td><td>' + p.emails + '</td><td>' + p.cpu + ' / ' + p.ramGB + ' GB</td><td>' + p.backups + '</td><td>' + p.ssl + '</td></tr>').join('') + '</tbody></table></div>'
       });
     }
 
